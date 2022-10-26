@@ -131,10 +131,10 @@ declare namespace React {
         key?: Key | null | undefined;
     }
     interface RefAttributes<T> extends Attributes {
-        ref?: Ref<T> | undefined;
+        ref?: Ref<T> | null | undefined;
     }
     interface ClassAttributes<T> extends Attributes {
-        ref?: LegacyRef<T> | undefined;
+        ref?: LegacyRef<T> | null | undefined;
     }
 
     interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
@@ -149,12 +149,12 @@ declare namespace React {
     > extends ReactElement<P, Exclude<T, number>> { }
 
     interface FunctionComponentElement<P> extends ReactElement<P, FunctionComponent<P>> {
-        ref?: ('ref' extends keyof P ? P extends { ref?: infer R | undefined } ? R : never : never) | undefined;
+        ref?: ('ref' extends keyof P ? P extends { ref?: infer R | null | undefined } ? R : never : never) | null | undefined;
     }
 
     type CElement<P, T extends Component<P, ComponentState>> = ComponentElement<P, T>;
     interface ComponentElement<P, T extends Component<P, ComponentState>> extends ReactElement<P, ComponentClass<P>> {
-        ref?: LegacyRef<T> | undefined;
+        ref?: LegacyRef<T> | null | undefined;
     }
 
     type ClassicElement<P> = CElement<P, ClassicComponent<P, ComponentState>>;
@@ -326,7 +326,7 @@ declare namespace React {
     // Context via RenderProps
     interface ProviderProps<T> {
         value: T;
-        children?: ReactNode | undefined;
+        children?: ReactNode | null | undefined;
     }
 
     interface ConsumerProps<T> {
@@ -352,11 +352,11 @@ declare namespace React {
     }
 
     interface NamedExoticComponent<P = {}> extends ExoticComponent<P> {
-        displayName?: string | undefined;
+        displayName?: string | null | undefined;
     }
 
     interface ProviderExoticComponent<P> extends ExoticComponent<P> {
-        propTypes?: WeakValidationMap<P> | undefined;
+        propTypes?: WeakValidationMap<P> | null | undefined;
     }
 
     type ContextType<C extends Context<any>> = C extends Context<infer T> ? T : never;
@@ -368,7 +368,7 @@ declare namespace React {
     interface Context<T> {
         Provider: Provider<T>;
         Consumer: Consumer<T>;
-        displayName?: string | undefined;
+        displayName?: string | null | undefined;
     }
     function createContext<T>(
         // If you thought this should be optional, see
@@ -387,11 +387,11 @@ declare namespace React {
         only<C>(children: C): C extends any[] ? never : C;
         toArray(children: ReactNode | ReactNode[]): Array<Exclude<ReactNode, boolean | null | undefined>>;
     };
-    const Fragment: ExoticComponent<{ children?: ReactNode | undefined }>;
-    const StrictMode: ExoticComponent<{ children?: ReactNode | undefined }>;
+    const Fragment: ExoticComponent<{ children?: ReactNode | null | undefined }>;
+    const StrictMode: ExoticComponent<{ children?: ReactNode | null | undefined }>;
 
     interface SuspenseProps {
-        children?: ReactNode | undefined;
+        children?: ReactNode | null | undefined;
 
         /** A fallback react tree to show when a Suspense child (like React.lazy) suspends */
         fallback?: ReactNode;
@@ -413,7 +413,7 @@ declare namespace React {
         interactions: Set<SchedulerInteraction>,
     ) => void;
     interface ProfilerProps {
-        children?: ReactNode | undefined;
+        children?: ReactNode | null | undefined;
         id: string;
         onRender: ProfilerOnRenderCallback;
     }
@@ -450,7 +450,7 @@ declare namespace React {
          *
          * @see https://reactjs.org/docs/context.html#classcontexttype
          */
-        static contextType?: Context<any> | undefined;
+        static contextType?: Context<any> | null | undefined;
 
         /**
          * If using the new style context, re-declare this in your class to be the
@@ -518,10 +518,10 @@ declare namespace React {
 
     interface FunctionComponent<P = {}> {
         (props: P, context?: any): ReactElement<any, any> | null;
-        propTypes?: WeakValidationMap<P> | undefined;
-        contextTypes?: ValidationMap<any> | undefined;
-        defaultProps?: Partial<P> | undefined;
-        displayName?: string | undefined;
+        propTypes?: WeakValidationMap<P> | null | undefined;
+        contextTypes?: ValidationMap<any> | null | undefined;
+        defaultProps?: Partial<P> | null | undefined;
+        displayName?: string | null | undefined;
     }
 
     /**
@@ -534,37 +534,37 @@ declare namespace React {
      */
     interface VoidFunctionComponent<P = {}> {
         (props: P, context?: any): ReactElement<any, any> | null;
-        propTypes?: WeakValidationMap<P> | undefined;
-        contextTypes?: ValidationMap<any> | undefined;
-        defaultProps?: Partial<P> | undefined;
-        displayName?: string | undefined;
+        propTypes?: WeakValidationMap<P> | null | undefined;
+        contextTypes?: ValidationMap<any> | null | undefined;
+        defaultProps?: Partial<P> | null | undefined;
+        displayName?: string | null | undefined;
     }
 
     type ForwardedRef<T> = ((instance: T | null) => void) | MutableRefObject<T | null> | null;
 
     interface ForwardRefRenderFunction<T, P = {}> {
         (props: P, ref: ForwardedRef<T>): ReactElement | null;
-        displayName?: string | undefined;
+        displayName?: string | null | undefined;
         // explicit rejected with `never` required due to
         // https://github.com/microsoft/TypeScript/issues/36826
         /**
          * defaultProps are not supported on render functions
          */
-        defaultProps?: never | undefined;
+        defaultProps?: never | null | undefined;
         /**
          * propTypes are not supported on render functions
          */
-        propTypes?: never | undefined;
+        propTypes?: never | null | undefined;
     }
 
     interface ComponentClass<P = {}, S = ComponentState> extends StaticLifecycle<P, S> {
         new (props: P, context?: any): Component<P, S>;
-        propTypes?: WeakValidationMap<P> | undefined;
-        contextType?: Context<any> | undefined;
-        contextTypes?: ValidationMap<any> | undefined;
-        childContextTypes?: ValidationMap<any> | undefined;
-        defaultProps?: Partial<P> | undefined;
-        displayName?: string | undefined;
+        propTypes?: WeakValidationMap<P> | null | undefined;
+        contextType?: Context<any> | null | undefined;
+        contextTypes?: ValidationMap<any> | null | undefined;
+        childContextTypes?: ValidationMap<any> | null | undefined;
+        defaultProps?: Partial<P> | null | undefined;
+        displayName?: string | null | undefined;
     }
 
     interface ClassicComponentClass<P = {}> extends ComponentClass<P> {
@@ -618,8 +618,8 @@ declare namespace React {
 
     // Unfortunately, we have no way of declaring that the component constructor must implement this
     interface StaticLifecycle<P, S> {
-        getDerivedStateFromProps?: GetDerivedStateFromProps<P, S> | undefined;
-        getDerivedStateFromError?: GetDerivedStateFromError<P, S> | undefined;
+        getDerivedStateFromProps?: GetDerivedStateFromProps<P, S> | null | undefined;
+        getDerivedStateFromError?: GetDerivedStateFromError<P, S> | null | undefined;
     }
 
     type GetDerivedStateFromProps<P, S> =
@@ -748,15 +748,15 @@ declare namespace React {
     }
 
     interface Mixin<P, S> extends ComponentLifecycle<P, S> {
-        mixins?: Array<Mixin<P, S>> | undefined;
+        mixins?: Array<Mixin<P, S>> | null | undefined;
         statics?: {
             [key: string]: any;
-        } | undefined;
+        } | null | undefined;
 
-        displayName?: string | undefined;
-        propTypes?: ValidationMap<any> | undefined;
-        contextTypes?: ValidationMap<any> | undefined;
-        childContextTypes?: ValidationMap<any> | undefined;
+        displayName?: string | null | undefined;
+        propTypes?: ValidationMap<any> | null | undefined;
+        contextTypes?: ValidationMap<any> | null | undefined;
+        childContextTypes?: ValidationMap<any> | null | undefined;
 
         getDefaultProps?(): P;
         getInitialState?(): S;
@@ -773,8 +773,8 @@ declare namespace React {
     // will show `ForwardRef(${Component.displayName || Component.name})` in devtools by default,
     // but can be given its own specific name
     interface ForwardRefExoticComponent<P> extends NamedExoticComponent<P> {
-        defaultProps?: Partial<P> | undefined;
-        propTypes?: WeakValidationMap<P> | undefined;
+        defaultProps?: Partial<P> | null | undefined;
+        propTypes?: WeakValidationMap<P> | null | undefined;
     }
 
     function forwardRef<T, P = {}>(render: ForwardRefRenderFunction<T, P>): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>>;
@@ -789,14 +789,14 @@ declare namespace React {
     type PropsWithRef<P> =
         // Just "P extends { ref?: infer R }" looks sufficient, but R will infer as {} if P is {}.
         'ref' extends keyof P
-            ? P extends { ref?: infer R | undefined }
+            ? P extends { ref?: infer R | null | undefined }
                 ? string extends R
-                    ? PropsWithoutRef<P> & { ref?: Exclude<R, string> | undefined }
+                    ? PropsWithoutRef<P> & { ref?: Exclude<R, string> | null | undefined }
                     : P
                 : P
             : P;
 
-    type PropsWithChildren<P = unknown> = P & { children?: ReactNode | undefined };
+    type PropsWithChildren<P = unknown> = P & { children?: ReactNode | null | undefined };
 
     /**
      * NOTE: prefer ComponentPropsWithRef, if the ref is forwarded,
@@ -902,7 +902,7 @@ declare namespace React {
      * @version 16.8.0
      * @see https://reactjs.org/docs/hooks-reference.html#usestate
      */
-    function useState<S = undefined>(): [S | undefined, Dispatch<SetStateAction<S | undefined>>];
+    function useState<S = undefined>(): [S | null | undefined, Dispatch<SetStateAction<S | null | undefined>>];
     /**
      * An alternative to `useState`.
      *
@@ -1032,7 +1032,7 @@ declare namespace React {
      * @version 16.8.0
      * @see https://reactjs.org/docs/hooks-reference.html#useref
      */
-    function useRef<T = undefined>(): MutableRefObject<T | undefined>;
+    function useRef<T = undefined>(): MutableRefObject<T | null | undefined>;
     /**
      * The signature is identical to `useEffect`, but it fires synchronously after all DOM mutations.
      * Use this to read layout from the DOM and synchronously re-render. Updates scheduled inside
@@ -1088,7 +1088,7 @@ declare namespace React {
      * @see https://reactjs.org/docs/hooks-reference.html#usememo
      */
     // allow undefined, but don't make it optional as that is very likely a mistake
-    function useMemo<T>(factory: () => T, deps: DependencyList | undefined): T;
+    function useMemo<T>(factory: () => T, deps: DependencyList | null | undefined): T;
     /**
      * `useDebugValue` can be used to display a label for custom hooks in React DevTools.
      *
@@ -1370,202 +1370,202 @@ declare namespace React {
     }
 
     interface DOMAttributes<T> {
-        children?: ReactNode | undefined;
+        children?: ReactNode | null | undefined;
         dangerouslySetInnerHTML?: {
             __html: string;
-        } | undefined;
+        } | null | undefined;
 
         // Clipboard Events
-        onCopy?: ClipboardEventHandler<T> | undefined;
-        onCopyCapture?: ClipboardEventHandler<T> | undefined;
-        onCut?: ClipboardEventHandler<T> | undefined;
-        onCutCapture?: ClipboardEventHandler<T> | undefined;
-        onPaste?: ClipboardEventHandler<T> | undefined;
-        onPasteCapture?: ClipboardEventHandler<T> | undefined;
+        onCopy?: ClipboardEventHandler<T> | null | undefined;
+        onCopyCapture?: ClipboardEventHandler<T> | null | undefined;
+        onCut?: ClipboardEventHandler<T> | null | undefined;
+        onCutCapture?: ClipboardEventHandler<T> | null | undefined;
+        onPaste?: ClipboardEventHandler<T> | null | undefined;
+        onPasteCapture?: ClipboardEventHandler<T> | null | undefined;
 
         // Composition Events
-        onCompositionEnd?: CompositionEventHandler<T> | undefined;
-        onCompositionEndCapture?: CompositionEventHandler<T> | undefined;
-        onCompositionStart?: CompositionEventHandler<T> | undefined;
-        onCompositionStartCapture?: CompositionEventHandler<T> | undefined;
-        onCompositionUpdate?: CompositionEventHandler<T> | undefined;
-        onCompositionUpdateCapture?: CompositionEventHandler<T> | undefined;
+        onCompositionEnd?: CompositionEventHandler<T> | null | undefined;
+        onCompositionEndCapture?: CompositionEventHandler<T> | null | undefined;
+        onCompositionStart?: CompositionEventHandler<T> | null | undefined;
+        onCompositionStartCapture?: CompositionEventHandler<T> | null | undefined;
+        onCompositionUpdate?: CompositionEventHandler<T> | null | undefined;
+        onCompositionUpdateCapture?: CompositionEventHandler<T> | null | undefined;
 
         // Focus Events
-        onFocus?: FocusEventHandler<T> | undefined;
-        onFocusCapture?: FocusEventHandler<T> | undefined;
-        onBlur?: FocusEventHandler<T> | undefined;
-        onBlurCapture?: FocusEventHandler<T> | undefined;
+        onFocus?: FocusEventHandler<T> | null | undefined;
+        onFocusCapture?: FocusEventHandler<T> | null | undefined;
+        onBlur?: FocusEventHandler<T> | null | undefined;
+        onBlurCapture?: FocusEventHandler<T> | null | undefined;
 
         // Form Events
-        onChange?: FormEventHandler<T> | undefined;
-        onChangeCapture?: FormEventHandler<T> | undefined;
-        onBeforeInput?: FormEventHandler<T> | undefined;
-        onBeforeInputCapture?: FormEventHandler<T> | undefined;
-        onInput?: FormEventHandler<T> | undefined;
-        onInputCapture?: FormEventHandler<T> | undefined;
-        onReset?: FormEventHandler<T> | undefined;
-        onResetCapture?: FormEventHandler<T> | undefined;
-        onSubmit?: FormEventHandler<T> | undefined;
-        onSubmitCapture?: FormEventHandler<T> | undefined;
-        onInvalid?: FormEventHandler<T> | undefined;
-        onInvalidCapture?: FormEventHandler<T> | undefined;
+        onChange?: FormEventHandler<T> | null | undefined;
+        onChangeCapture?: FormEventHandler<T> | null | undefined;
+        onBeforeInput?: FormEventHandler<T> | null | undefined;
+        onBeforeInputCapture?: FormEventHandler<T> | null | undefined;
+        onInput?: FormEventHandler<T> | null | undefined;
+        onInputCapture?: FormEventHandler<T> | null | undefined;
+        onReset?: FormEventHandler<T> | null | undefined;
+        onResetCapture?: FormEventHandler<T> | null | undefined;
+        onSubmit?: FormEventHandler<T> | null | undefined;
+        onSubmitCapture?: FormEventHandler<T> | null | undefined;
+        onInvalid?: FormEventHandler<T> | null | undefined;
+        onInvalidCapture?: FormEventHandler<T> | null | undefined;
 
         // Image Events
-        onLoad?: ReactEventHandler<T> | undefined;
-        onLoadCapture?: ReactEventHandler<T> | undefined;
-        onError?: ReactEventHandler<T> | undefined; // also a Media Event
-        onErrorCapture?: ReactEventHandler<T> | undefined; // also a Media Event
+        onLoad?: ReactEventHandler<T> | null | undefined;
+        onLoadCapture?: ReactEventHandler<T> | null | undefined;
+        onError?: ReactEventHandler<T> | null | undefined; // also a Media Event
+        onErrorCapture?: ReactEventHandler<T> | null | undefined; // also a Media Event
 
         // Keyboard Events
-        onKeyDown?: KeyboardEventHandler<T> | undefined;
-        onKeyDownCapture?: KeyboardEventHandler<T> | undefined;
+        onKeyDown?: KeyboardEventHandler<T> | null | undefined;
+        onKeyDownCapture?: KeyboardEventHandler<T> | null | undefined;
         /** @deprecated */
-        onKeyPress?: KeyboardEventHandler<T> | undefined;
+        onKeyPress?: KeyboardEventHandler<T> | null | undefined;
         /** @deprecated */
-        onKeyPressCapture?: KeyboardEventHandler<T> | undefined;
-        onKeyUp?: KeyboardEventHandler<T> | undefined;
-        onKeyUpCapture?: KeyboardEventHandler<T> | undefined;
+        onKeyPressCapture?: KeyboardEventHandler<T> | null | undefined;
+        onKeyUp?: KeyboardEventHandler<T> | null | undefined;
+        onKeyUpCapture?: KeyboardEventHandler<T> | null | undefined;
 
         // Media Events
-        onAbort?: ReactEventHandler<T> | undefined;
-        onAbortCapture?: ReactEventHandler<T> | undefined;
-        onCanPlay?: ReactEventHandler<T> | undefined;
-        onCanPlayCapture?: ReactEventHandler<T> | undefined;
-        onCanPlayThrough?: ReactEventHandler<T> | undefined;
-        onCanPlayThroughCapture?: ReactEventHandler<T> | undefined;
-        onDurationChange?: ReactEventHandler<T> | undefined;
-        onDurationChangeCapture?: ReactEventHandler<T> | undefined;
-        onEmptied?: ReactEventHandler<T> | undefined;
-        onEmptiedCapture?: ReactEventHandler<T> | undefined;
-        onEncrypted?: ReactEventHandler<T> | undefined;
-        onEncryptedCapture?: ReactEventHandler<T> | undefined;
-        onEnded?: ReactEventHandler<T> | undefined;
-        onEndedCapture?: ReactEventHandler<T> | undefined;
-        onLoadedData?: ReactEventHandler<T> | undefined;
-        onLoadedDataCapture?: ReactEventHandler<T> | undefined;
-        onLoadedMetadata?: ReactEventHandler<T> | undefined;
-        onLoadedMetadataCapture?: ReactEventHandler<T> | undefined;
-        onLoadStart?: ReactEventHandler<T> | undefined;
-        onLoadStartCapture?: ReactEventHandler<T> | undefined;
-        onPause?: ReactEventHandler<T> | undefined;
-        onPauseCapture?: ReactEventHandler<T> | undefined;
-        onPlay?: ReactEventHandler<T> | undefined;
-        onPlayCapture?: ReactEventHandler<T> | undefined;
-        onPlaying?: ReactEventHandler<T> | undefined;
-        onPlayingCapture?: ReactEventHandler<T> | undefined;
-        onProgress?: ReactEventHandler<T> | undefined;
-        onProgressCapture?: ReactEventHandler<T> | undefined;
-        onRateChange?: ReactEventHandler<T> | undefined;
-        onRateChangeCapture?: ReactEventHandler<T> | undefined;
-        onSeeked?: ReactEventHandler<T> | undefined;
-        onSeekedCapture?: ReactEventHandler<T> | undefined;
-        onSeeking?: ReactEventHandler<T> | undefined;
-        onSeekingCapture?: ReactEventHandler<T> | undefined;
-        onStalled?: ReactEventHandler<T> | undefined;
-        onStalledCapture?: ReactEventHandler<T> | undefined;
-        onSuspend?: ReactEventHandler<T> | undefined;
-        onSuspendCapture?: ReactEventHandler<T> | undefined;
-        onTimeUpdate?: ReactEventHandler<T> | undefined;
-        onTimeUpdateCapture?: ReactEventHandler<T> | undefined;
-        onVolumeChange?: ReactEventHandler<T> | undefined;
-        onVolumeChangeCapture?: ReactEventHandler<T> | undefined;
-        onWaiting?: ReactEventHandler<T> | undefined;
-        onWaitingCapture?: ReactEventHandler<T> | undefined;
+        onAbort?: ReactEventHandler<T> | null | undefined;
+        onAbortCapture?: ReactEventHandler<T> | null | undefined;
+        onCanPlay?: ReactEventHandler<T> | null | undefined;
+        onCanPlayCapture?: ReactEventHandler<T> | null | undefined;
+        onCanPlayThrough?: ReactEventHandler<T> | null | undefined;
+        onCanPlayThroughCapture?: ReactEventHandler<T> | null | undefined;
+        onDurationChange?: ReactEventHandler<T> | null | undefined;
+        onDurationChangeCapture?: ReactEventHandler<T> | null | undefined;
+        onEmptied?: ReactEventHandler<T> | null | undefined;
+        onEmptiedCapture?: ReactEventHandler<T> | null | undefined;
+        onEncrypted?: ReactEventHandler<T> | null | undefined;
+        onEncryptedCapture?: ReactEventHandler<T> | null | undefined;
+        onEnded?: ReactEventHandler<T> | null | undefined;
+        onEndedCapture?: ReactEventHandler<T> | null | undefined;
+        onLoadedData?: ReactEventHandler<T> | null | undefined;
+        onLoadedDataCapture?: ReactEventHandler<T> | null | undefined;
+        onLoadedMetadata?: ReactEventHandler<T> | null | undefined;
+        onLoadedMetadataCapture?: ReactEventHandler<T> | null | undefined;
+        onLoadStart?: ReactEventHandler<T> | null | undefined;
+        onLoadStartCapture?: ReactEventHandler<T> | null | undefined;
+        onPause?: ReactEventHandler<T> | null | undefined;
+        onPauseCapture?: ReactEventHandler<T> | null | undefined;
+        onPlay?: ReactEventHandler<T> | null | undefined;
+        onPlayCapture?: ReactEventHandler<T> | null | undefined;
+        onPlaying?: ReactEventHandler<T> | null | undefined;
+        onPlayingCapture?: ReactEventHandler<T> | null | undefined;
+        onProgress?: ReactEventHandler<T> | null | undefined;
+        onProgressCapture?: ReactEventHandler<T> | null | undefined;
+        onRateChange?: ReactEventHandler<T> | null | undefined;
+        onRateChangeCapture?: ReactEventHandler<T> | null | undefined;
+        onSeeked?: ReactEventHandler<T> | null | undefined;
+        onSeekedCapture?: ReactEventHandler<T> | null | undefined;
+        onSeeking?: ReactEventHandler<T> | null | undefined;
+        onSeekingCapture?: ReactEventHandler<T> | null | undefined;
+        onStalled?: ReactEventHandler<T> | null | undefined;
+        onStalledCapture?: ReactEventHandler<T> | null | undefined;
+        onSuspend?: ReactEventHandler<T> | null | undefined;
+        onSuspendCapture?: ReactEventHandler<T> | null | undefined;
+        onTimeUpdate?: ReactEventHandler<T> | null | undefined;
+        onTimeUpdateCapture?: ReactEventHandler<T> | null | undefined;
+        onVolumeChange?: ReactEventHandler<T> | null | undefined;
+        onVolumeChangeCapture?: ReactEventHandler<T> | null | undefined;
+        onWaiting?: ReactEventHandler<T> | null | undefined;
+        onWaitingCapture?: ReactEventHandler<T> | null | undefined;
 
         // MouseEvents
-        onAuxClick?: MouseEventHandler<T> | undefined;
-        onAuxClickCapture?: MouseEventHandler<T> | undefined;
-        onClick?: MouseEventHandler<T> | undefined;
-        onClickCapture?: MouseEventHandler<T> | undefined;
-        onContextMenu?: MouseEventHandler<T> | undefined;
-        onContextMenuCapture?: MouseEventHandler<T> | undefined;
-        onDoubleClick?: MouseEventHandler<T> | undefined;
-        onDoubleClickCapture?: MouseEventHandler<T> | undefined;
-        onDrag?: DragEventHandler<T> | undefined;
-        onDragCapture?: DragEventHandler<T> | undefined;
-        onDragEnd?: DragEventHandler<T> | undefined;
-        onDragEndCapture?: DragEventHandler<T> | undefined;
-        onDragEnter?: DragEventHandler<T> | undefined;
-        onDragEnterCapture?: DragEventHandler<T> | undefined;
-        onDragExit?: DragEventHandler<T> | undefined;
-        onDragExitCapture?: DragEventHandler<T> | undefined;
-        onDragLeave?: DragEventHandler<T> | undefined;
-        onDragLeaveCapture?: DragEventHandler<T> | undefined;
-        onDragOver?: DragEventHandler<T> | undefined;
-        onDragOverCapture?: DragEventHandler<T> | undefined;
-        onDragStart?: DragEventHandler<T> | undefined;
-        onDragStartCapture?: DragEventHandler<T> | undefined;
-        onDrop?: DragEventHandler<T> | undefined;
-        onDropCapture?: DragEventHandler<T> | undefined;
-        onMouseDown?: MouseEventHandler<T> | undefined;
-        onMouseDownCapture?: MouseEventHandler<T> | undefined;
-        onMouseEnter?: MouseEventHandler<T> | undefined;
-        onMouseLeave?: MouseEventHandler<T> | undefined;
-        onMouseMove?: MouseEventHandler<T> | undefined;
-        onMouseMoveCapture?: MouseEventHandler<T> | undefined;
-        onMouseOut?: MouseEventHandler<T> | undefined;
-        onMouseOutCapture?: MouseEventHandler<T> | undefined;
-        onMouseOver?: MouseEventHandler<T> | undefined;
-        onMouseOverCapture?: MouseEventHandler<T> | undefined;
-        onMouseUp?: MouseEventHandler<T> | undefined;
-        onMouseUpCapture?: MouseEventHandler<T> | undefined;
+        onAuxClick?: MouseEventHandler<T> | null | undefined;
+        onAuxClickCapture?: MouseEventHandler<T> | null | undefined;
+        onClick?: MouseEventHandler<T> | null | undefined;
+        onClickCapture?: MouseEventHandler<T> | null | undefined;
+        onContextMenu?: MouseEventHandler<T> | null | undefined;
+        onContextMenuCapture?: MouseEventHandler<T> | null | undefined;
+        onDoubleClick?: MouseEventHandler<T> | null | undefined;
+        onDoubleClickCapture?: MouseEventHandler<T> | null | undefined;
+        onDrag?: DragEventHandler<T> | null | undefined;
+        onDragCapture?: DragEventHandler<T> | null | undefined;
+        onDragEnd?: DragEventHandler<T> | null | undefined;
+        onDragEndCapture?: DragEventHandler<T> | null | undefined;
+        onDragEnter?: DragEventHandler<T> | null | undefined;
+        onDragEnterCapture?: DragEventHandler<T> | null | undefined;
+        onDragExit?: DragEventHandler<T> | null | undefined;
+        onDragExitCapture?: DragEventHandler<T> | null | undefined;
+        onDragLeave?: DragEventHandler<T> | null | undefined;
+        onDragLeaveCapture?: DragEventHandler<T> | null | undefined;
+        onDragOver?: DragEventHandler<T> | null | undefined;
+        onDragOverCapture?: DragEventHandler<T> | null | undefined;
+        onDragStart?: DragEventHandler<T> | null | undefined;
+        onDragStartCapture?: DragEventHandler<T> | null | undefined;
+        onDrop?: DragEventHandler<T> | null | undefined;
+        onDropCapture?: DragEventHandler<T> | null | undefined;
+        onMouseDown?: MouseEventHandler<T> | null | undefined;
+        onMouseDownCapture?: MouseEventHandler<T> | null | undefined;
+        onMouseEnter?: MouseEventHandler<T> | null | undefined;
+        onMouseLeave?: MouseEventHandler<T> | null | undefined;
+        onMouseMove?: MouseEventHandler<T> | null | undefined;
+        onMouseMoveCapture?: MouseEventHandler<T> | null | undefined;
+        onMouseOut?: MouseEventHandler<T> | null | undefined;
+        onMouseOutCapture?: MouseEventHandler<T> | null | undefined;
+        onMouseOver?: MouseEventHandler<T> | null | undefined;
+        onMouseOverCapture?: MouseEventHandler<T> | null | undefined;
+        onMouseUp?: MouseEventHandler<T> | null | undefined;
+        onMouseUpCapture?: MouseEventHandler<T> | null | undefined;
 
         // Selection Events
-        onSelect?: ReactEventHandler<T> | undefined;
-        onSelectCapture?: ReactEventHandler<T> | undefined;
+        onSelect?: ReactEventHandler<T> | null | undefined;
+        onSelectCapture?: ReactEventHandler<T> | null | undefined;
 
         // Touch Events
-        onTouchCancel?: TouchEventHandler<T> | undefined;
-        onTouchCancelCapture?: TouchEventHandler<T> | undefined;
-        onTouchEnd?: TouchEventHandler<T> | undefined;
-        onTouchEndCapture?: TouchEventHandler<T> | undefined;
-        onTouchMove?: TouchEventHandler<T> | undefined;
-        onTouchMoveCapture?: TouchEventHandler<T> | undefined;
-        onTouchStart?: TouchEventHandler<T> | undefined;
-        onTouchStartCapture?: TouchEventHandler<T> | undefined;
+        onTouchCancel?: TouchEventHandler<T> | null | undefined;
+        onTouchCancelCapture?: TouchEventHandler<T> | null | undefined;
+        onTouchEnd?: TouchEventHandler<T> | null | undefined;
+        onTouchEndCapture?: TouchEventHandler<T> | null | undefined;
+        onTouchMove?: TouchEventHandler<T> | null | undefined;
+        onTouchMoveCapture?: TouchEventHandler<T> | null | undefined;
+        onTouchStart?: TouchEventHandler<T> | null | undefined;
+        onTouchStartCapture?: TouchEventHandler<T> | null | undefined;
 
         // Pointer Events
-        onPointerDown?: PointerEventHandler<T> | undefined;
-        onPointerDownCapture?: PointerEventHandler<T> | undefined;
-        onPointerMove?: PointerEventHandler<T> | undefined;
-        onPointerMoveCapture?: PointerEventHandler<T> | undefined;
-        onPointerUp?: PointerEventHandler<T> | undefined;
-        onPointerUpCapture?: PointerEventHandler<T> | undefined;
-        onPointerCancel?: PointerEventHandler<T> | undefined;
-        onPointerCancelCapture?: PointerEventHandler<T> | undefined;
-        onPointerEnter?: PointerEventHandler<T> | undefined;
-        onPointerEnterCapture?: PointerEventHandler<T> | undefined;
-        onPointerLeave?: PointerEventHandler<T> | undefined;
-        onPointerLeaveCapture?: PointerEventHandler<T> | undefined;
-        onPointerOver?: PointerEventHandler<T> | undefined;
-        onPointerOverCapture?: PointerEventHandler<T> | undefined;
-        onPointerOut?: PointerEventHandler<T> | undefined;
-        onPointerOutCapture?: PointerEventHandler<T> | undefined;
-        onGotPointerCapture?: PointerEventHandler<T> | undefined;
-        onGotPointerCaptureCapture?: PointerEventHandler<T> | undefined;
-        onLostPointerCapture?: PointerEventHandler<T> | undefined;
-        onLostPointerCaptureCapture?: PointerEventHandler<T> | undefined;
+        onPointerDown?: PointerEventHandler<T> | null | undefined;
+        onPointerDownCapture?: PointerEventHandler<T> | null | undefined;
+        onPointerMove?: PointerEventHandler<T> | null | undefined;
+        onPointerMoveCapture?: PointerEventHandler<T> | null | undefined;
+        onPointerUp?: PointerEventHandler<T> | null | undefined;
+        onPointerUpCapture?: PointerEventHandler<T> | null | undefined;
+        onPointerCancel?: PointerEventHandler<T> | null | undefined;
+        onPointerCancelCapture?: PointerEventHandler<T> | null | undefined;
+        onPointerEnter?: PointerEventHandler<T> | null | undefined;
+        onPointerEnterCapture?: PointerEventHandler<T> | null | undefined;
+        onPointerLeave?: PointerEventHandler<T> | null | undefined;
+        onPointerLeaveCapture?: PointerEventHandler<T> | null | undefined;
+        onPointerOver?: PointerEventHandler<T> | null | undefined;
+        onPointerOverCapture?: PointerEventHandler<T> | null | undefined;
+        onPointerOut?: PointerEventHandler<T> | null | undefined;
+        onPointerOutCapture?: PointerEventHandler<T> | null | undefined;
+        onGotPointerCapture?: PointerEventHandler<T> | null | undefined;
+        onGotPointerCaptureCapture?: PointerEventHandler<T> | null | undefined;
+        onLostPointerCapture?: PointerEventHandler<T> | null | undefined;
+        onLostPointerCaptureCapture?: PointerEventHandler<T> | null | undefined;
 
         // UI Events
-        onScroll?: UIEventHandler<T> | undefined;
-        onScrollCapture?: UIEventHandler<T> | undefined;
+        onScroll?: UIEventHandler<T> | null | undefined;
+        onScrollCapture?: UIEventHandler<T> | null | undefined;
 
         // Wheel Events
-        onWheel?: WheelEventHandler<T> | undefined;
-        onWheelCapture?: WheelEventHandler<T> | undefined;
+        onWheel?: WheelEventHandler<T> | null | undefined;
+        onWheelCapture?: WheelEventHandler<T> | null | undefined;
 
         // Animation Events
-        onAnimationStart?: AnimationEventHandler<T> | undefined;
-        onAnimationStartCapture?: AnimationEventHandler<T> | undefined;
-        onAnimationEnd?: AnimationEventHandler<T> | undefined;
-        onAnimationEndCapture?: AnimationEventHandler<T> | undefined;
-        onAnimationIteration?: AnimationEventHandler<T> | undefined;
-        onAnimationIterationCapture?: AnimationEventHandler<T> | undefined;
+        onAnimationStart?: AnimationEventHandler<T> | null | undefined;
+        onAnimationStartCapture?: AnimationEventHandler<T> | null | undefined;
+        onAnimationEnd?: AnimationEventHandler<T> | null | undefined;
+        onAnimationEndCapture?: AnimationEventHandler<T> | null | undefined;
+        onAnimationIteration?: AnimationEventHandler<T> | null | undefined;
+        onAnimationIterationCapture?: AnimationEventHandler<T> | null | undefined;
 
         // Transition Events
-        onTransitionEnd?: TransitionEventHandler<T> | undefined;
-        onTransitionEndCapture?: TransitionEventHandler<T> | undefined;
+        onTransitionEnd?: TransitionEventHandler<T> | null | undefined;
+        onTransitionEndCapture?: TransitionEventHandler<T> | null | undefined;
     }
 
     export interface CSSProperties extends CSS.Properties<string | number> {
@@ -1582,189 +1582,189 @@ declare namespace React {
     // All the WAI-ARIA 1.1 attributes from https://www.w3.org/TR/wai-aria-1.1/
     interface AriaAttributes {
         /** Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. */
-        'aria-activedescendant'?: string | undefined;
+        'aria-activedescendant'?: string | null | undefined;
         /** Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. */
-        'aria-atomic'?: Booleanish | undefined;
+        'aria-atomic'?: Booleanish | null | undefined;
         /**
          * Indicates whether inputting text could trigger display of one or more predictions of the user's intended value for an input and specifies how predictions would be
          * presented if they are made.
          */
-        'aria-autocomplete'?: 'none' | 'inline' | 'list' | 'both' | undefined;
+        'aria-autocomplete'?: 'none' | 'inline' | 'list' | 'both' | null | undefined;
         /** Indicates an element is being modified and that assistive technologies MAY want to wait until the modifications are complete before exposing them to the user. */
-        'aria-busy'?: Booleanish | undefined;
+        'aria-busy'?: Booleanish | null | undefined;
         /**
          * Indicates the current "checked" state of checkboxes, radio buttons, and other widgets.
          * @see aria-pressed @see aria-selected.
          */
-        'aria-checked'?: boolean | 'false' | 'mixed' | 'true' | undefined;
+        'aria-checked'?: boolean | 'false' | 'mixed' | 'true' | null | undefined;
         /**
          * Defines the total number of columns in a table, grid, or treegrid.
          * @see aria-colindex.
          */
-        'aria-colcount'?: number | undefined;
+        'aria-colcount'?: number | null | undefined;
         /**
          * Defines an element's column index or position with respect to the total number of columns within a table, grid, or treegrid.
          * @see aria-colcount @see aria-colspan.
          */
-        'aria-colindex'?: number | undefined;
+        'aria-colindex'?: number | null | undefined;
         /**
          * Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid.
          * @see aria-colindex @see aria-rowspan.
          */
-        'aria-colspan'?: number | undefined;
+        'aria-colspan'?: number | null | undefined;
         /**
          * Identifies the element (or elements) whose contents or presence are controlled by the current element.
          * @see aria-owns.
          */
-        'aria-controls'?: string | undefined;
+        'aria-controls'?: string | null | undefined;
         /** Indicates the element that represents the current item within a container or set of related elements. */
-        'aria-current'?: boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time' | undefined;
+        'aria-current'?: boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time' | null | undefined;
         /**
          * Identifies the element (or elements) that describes the object.
          * @see aria-labelledby
          */
-        'aria-describedby'?: string | undefined;
+        'aria-describedby'?: string | null | undefined;
         /**
          * Identifies the element that provides a detailed, extended description for the object.
          * @see aria-describedby.
          */
-        'aria-details'?: string | undefined;
+        'aria-details'?: string | null | undefined;
         /**
          * Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable.
          * @see aria-hidden @see aria-readonly.
          */
-        'aria-disabled'?: Booleanish | undefined;
+        'aria-disabled'?: Booleanish | null | undefined;
         /**
          * Indicates what functions can be performed when a dragged object is released on the drop target.
          * @deprecated in ARIA 1.1
          */
-        'aria-dropeffect'?: 'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup' | undefined;
+        'aria-dropeffect'?: 'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup' | null | undefined;
         /**
          * Identifies the element that provides an error message for the object.
          * @see aria-invalid @see aria-describedby.
          */
-        'aria-errormessage'?: string | undefined;
+        'aria-errormessage'?: string | null | undefined;
         /** Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. */
-        'aria-expanded'?: Booleanish | undefined;
+        'aria-expanded'?: Booleanish | null | undefined;
         /**
          * Identifies the next element (or elements) in an alternate reading order of content which, at the user's discretion,
          * allows assistive technology to override the general default of reading in document source order.
          */
-        'aria-flowto'?: string | undefined;
+        'aria-flowto'?: string | null | undefined;
         /**
          * Indicates an element's "grabbed" state in a drag-and-drop operation.
          * @deprecated in ARIA 1.1
          */
-        'aria-grabbed'?: Booleanish | undefined;
+        'aria-grabbed'?: Booleanish | null | undefined;
         /** Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. */
-        'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | undefined;
+        'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null | undefined;
         /**
          * Indicates whether the element is exposed to an accessibility API.
          * @see aria-disabled.
          */
-        'aria-hidden'?: Booleanish | undefined;
+        'aria-hidden'?: Booleanish | null | undefined;
         /**
          * Indicates the entered value does not conform to the format expected by the application.
          * @see aria-errormessage.
          */
-        'aria-invalid'?: boolean | 'false' | 'true' | 'grammar' | 'spelling' | undefined;
+        'aria-invalid'?: boolean | 'false' | 'true' | 'grammar' | 'spelling' | null | undefined;
         /** Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. */
-        'aria-keyshortcuts'?: string | undefined;
+        'aria-keyshortcuts'?: string | null | undefined;
         /**
          * Defines a string value that labels the current element.
          * @see aria-labelledby.
          */
-        'aria-label'?: string | undefined;
+        'aria-label'?: string | null | undefined;
         /**
          * Identifies the element (or elements) that labels the current element.
          * @see aria-describedby.
          */
-        'aria-labelledby'?: string | undefined;
+        'aria-labelledby'?: string | null | undefined;
         /** Defines the hierarchical level of an element within a structure. */
-        'aria-level'?: number | undefined;
+        'aria-level'?: number | null | undefined;
         /** Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. */
-        'aria-live'?: 'off' | 'assertive' | 'polite' | undefined;
+        'aria-live'?: 'off' | 'assertive' | 'polite' | null | undefined;
         /** Indicates whether an element is modal when displayed. */
-        'aria-modal'?: Booleanish | undefined;
+        'aria-modal'?: Booleanish | null | undefined;
         /** Indicates whether a text box accepts multiple lines of input or only a single line. */
-        'aria-multiline'?: Booleanish | undefined;
+        'aria-multiline'?: Booleanish | null | undefined;
         /** Indicates that the user may select more than one item from the current selectable descendants. */
-        'aria-multiselectable'?: Booleanish | undefined;
+        'aria-multiselectable'?: Booleanish | null | undefined;
         /** Indicates whether the element's orientation is horizontal, vertical, or unknown/ambiguous. */
-        'aria-orientation'?: 'horizontal' | 'vertical' | undefined;
+        'aria-orientation'?: 'horizontal' | 'vertical' | null | undefined;
         /**
          * Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship
          * between DOM elements where the DOM hierarchy cannot be used to represent the relationship.
          * @see aria-controls.
          */
-        'aria-owns'?: string | undefined;
+        'aria-owns'?: string | null | undefined;
         /**
          * Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value.
          * A hint could be a sample value or a brief description of the expected format.
          */
-        'aria-placeholder'?: string | undefined;
+        'aria-placeholder'?: string | null | undefined;
         /**
          * Defines an element's number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
          * @see aria-setsize.
          */
-        'aria-posinset'?: number | undefined;
+        'aria-posinset'?: number | null | undefined;
         /**
          * Indicates the current "pressed" state of toggle buttons.
          * @see aria-checked @see aria-selected.
          */
-        'aria-pressed'?: boolean | 'false' | 'mixed' | 'true' | undefined;
+        'aria-pressed'?: boolean | 'false' | 'mixed' | 'true' | null | undefined;
         /**
          * Indicates that the element is not editable, but is otherwise operable.
          * @see aria-disabled.
          */
-        'aria-readonly'?: Booleanish | undefined;
+        'aria-readonly'?: Booleanish | null | undefined;
         /**
          * Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified.
          * @see aria-atomic.
          */
-        'aria-relevant'?: 'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals' | undefined;
+        'aria-relevant'?: 'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals' | null | undefined;
         /** Indicates that user input is required on the element before a form may be submitted. */
-        'aria-required'?: Booleanish | undefined;
+        'aria-required'?: Booleanish | null | undefined;
         /** Defines a human-readable, author-localized description for the role of an element. */
-        'aria-roledescription'?: string | undefined;
+        'aria-roledescription'?: string | null | undefined;
         /**
          * Defines the total number of rows in a table, grid, or treegrid.
          * @see aria-rowindex.
          */
-        'aria-rowcount'?: number | undefined;
+        'aria-rowcount'?: number | null | undefined;
         /**
          * Defines an element's row index or position with respect to the total number of rows within a table, grid, or treegrid.
          * @see aria-rowcount @see aria-rowspan.
          */
-        'aria-rowindex'?: number | undefined;
+        'aria-rowindex'?: number | null | undefined;
         /**
          * Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid.
          * @see aria-rowindex @see aria-colspan.
          */
-        'aria-rowspan'?: number | undefined;
+        'aria-rowspan'?: number | null | undefined;
         /**
          * Indicates the current "selected" state of various widgets.
          * @see aria-checked @see aria-pressed.
          */
-        'aria-selected'?: Booleanish | undefined;
+        'aria-selected'?: Booleanish | null | undefined;
         /**
          * Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
          * @see aria-posinset.
          */
-        'aria-setsize'?: number | undefined;
+        'aria-setsize'?: number | null | undefined;
         /** Indicates if items in a table or grid are sorted in ascending or descending order. */
-        'aria-sort'?: 'none' | 'ascending' | 'descending' | 'other' | undefined;
+        'aria-sort'?: 'none' | 'ascending' | 'descending' | 'other' | null | undefined;
         /** Defines the maximum allowed value for a range widget. */
-        'aria-valuemax'?: number | undefined;
+        'aria-valuemax'?: number | null | undefined;
         /** Defines the minimum allowed value for a range widget. */
-        'aria-valuemin'?: number | undefined;
+        'aria-valuemin'?: number | null | undefined;
         /**
          * Defines the current value for a range widget.
          * @see aria-valuetext.
          */
-        'aria-valuenow'?: number | undefined;
+        'aria-valuenow'?: number | null | undefined;
         /** Defines the human readable text alternative of aria-valuenow for a range widget. */
-        'aria-valuetext'?: string | undefined;
+        'aria-valuetext'?: string | null | undefined;
     }
 
     // All the WAI-ARIA 1.1 role attribute values from https://www.w3.org/TR/wai-aria-1.1/#role_definitions
@@ -1842,180 +1842,180 @@ declare namespace React {
 
     interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
         // React-specific Attributes
-        defaultChecked?: boolean | undefined;
-        defaultValue?: string | number | ReadonlyArray<string> | undefined;
-        suppressContentEditableWarning?: boolean | undefined;
-        suppressHydrationWarning?: boolean | undefined;
+        defaultChecked?: boolean | null | undefined;
+        defaultValue?: string | number | ReadonlyArray<string> | null | undefined;
+        suppressContentEditableWarning?: boolean | null | undefined;
+        suppressHydrationWarning?: boolean | null | undefined;
 
         // Standard HTML Attributes
-        accessKey?: string | undefined;
-        className?: string | undefined;
-        contentEditable?: Booleanish | "inherit" | undefined;
-        contextMenu?: string | undefined;
-        dir?: string | undefined;
-        draggable?: Booleanish | undefined;
-        hidden?: boolean | undefined;
-        id?: string | undefined;
-        lang?: string | undefined;
-        nonce?: string | undefined;
-        placeholder?: string | undefined;
-        slot?: string | undefined;
-        spellCheck?: Booleanish | undefined;
-        style?: CSSProperties | undefined;
-        tabIndex?: number | undefined;
-        title?: string | undefined;
-        translate?: 'yes' | 'no' | undefined;
+        accessKey?: string | null | undefined;
+        className?: string | null | undefined;
+        contentEditable?: Booleanish | "inherit" | null | undefined;
+        contextMenu?: string | null | undefined;
+        dir?: string | null | undefined;
+        draggable?: Booleanish | null | undefined;
+        hidden?: boolean | null | undefined;
+        id?: string | null | undefined;
+        lang?: string | null | undefined;
+        nonce?: string | null | undefined;
+        placeholder?: string | null | undefined;
+        slot?: string | null | undefined;
+        spellCheck?: Booleanish | null | undefined;
+        style?: CSSProperties | null | undefined;
+        tabIndex?: number | null | undefined;
+        title?: string | null | undefined;
+        translate?: 'yes' | 'no' | null | undefined;
 
         // Unknown
-        radioGroup?: string | undefined; // <command>, <menuitem>
+        radioGroup?: string | null | undefined; // <command>, <menuitem>
 
         // WAI-ARIA
-        role?: AriaRole | undefined;
+        role?: AriaRole | null | undefined;
 
         // RDFa Attributes
-        about?: string | undefined;
-        datatype?: string | undefined;
+        about?: string | null | undefined;
+        datatype?: string | null | undefined;
         inlist?: any;
-        prefix?: string | undefined;
-        property?: string | undefined;
-        resource?: string | undefined;
-        typeof?: string | undefined;
-        vocab?: string | undefined;
+        prefix?: string | null | undefined;
+        property?: string | null | undefined;
+        resource?: string | null | undefined;
+        typeof?: string | null | undefined;
+        vocab?: string | null | undefined;
 
         // Non-standard Attributes
-        autoCapitalize?: string | undefined;
-        autoCorrect?: string | undefined;
-        autoSave?: string | undefined;
-        color?: string | undefined;
-        itemProp?: string | undefined;
-        itemScope?: boolean | undefined;
-        itemType?: string | undefined;
-        itemID?: string | undefined;
-        itemRef?: string | undefined;
-        results?: number | undefined;
-        security?: string | undefined;
-        unselectable?: 'on' | 'off' | undefined;
+        autoCapitalize?: string | null | undefined;
+        autoCorrect?: string | null | undefined;
+        autoSave?: string | null | undefined;
+        color?: string | null | undefined;
+        itemProp?: string | null | undefined;
+        itemScope?: boolean | null | undefined;
+        itemType?: string | null | undefined;
+        itemID?: string | null | undefined;
+        itemRef?: string | null | undefined;
+        results?: number | null | undefined;
+        security?: string | null | undefined;
+        unselectable?: 'on' | 'off' | null | undefined;
 
         // Living Standard
         /**
          * Hints at the type of data that might be entered by the user while editing the element or its contents
          * @see https://html.spec.whatwg.org/multipage/interaction.html#input-modalities:-the-inputmode-attribute
          */
-        inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search' | undefined;
+        inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search' | null | undefined;
         /**
          * Specify that a standard HTML element should behave like a defined custom built-in element
          * @see https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
          */
-        is?: string | undefined;
+        is?: string | null | undefined;
     }
 
     interface AllHTMLAttributes<T> extends HTMLAttributes<T> {
         // Standard HTML Attributes
-        accept?: string | undefined;
-        acceptCharset?: string | undefined;
-        action?: string | undefined;
-        allowFullScreen?: boolean | undefined;
-        allowTransparency?: boolean | undefined;
-        alt?: string | undefined;
-        as?: string | undefined;
-        async?: boolean | undefined;
-        autoComplete?: string | undefined;
-        autoFocus?: boolean | undefined;
-        autoPlay?: boolean | undefined;
-        capture?: boolean | 'user' | 'environment' | undefined;
-        cellPadding?: number | string | undefined;
-        cellSpacing?: number | string | undefined;
-        charSet?: string | undefined;
-        challenge?: string | undefined;
-        checked?: boolean | undefined;
-        cite?: string | undefined;
-        classID?: string | undefined;
-        cols?: number | undefined;
-        colSpan?: number | undefined;
-        content?: string | undefined;
-        controls?: boolean | undefined;
-        coords?: string | undefined;
-        crossOrigin?: string | undefined;
-        data?: string | undefined;
-        dateTime?: string | undefined;
-        default?: boolean | undefined;
-        defer?: boolean | undefined;
-        disabled?: boolean | undefined;
+        accept?: string | null | undefined;
+        acceptCharset?: string | null | undefined;
+        action?: string | null | undefined;
+        allowFullScreen?: boolean | null | undefined;
+        allowTransparency?: boolean | null | undefined;
+        alt?: string | null | undefined;
+        as?: string | null | undefined;
+        async?: boolean | null | undefined;
+        autoComplete?: string | null | undefined;
+        autoFocus?: boolean | null | undefined;
+        autoPlay?: boolean | null | undefined;
+        capture?: boolean | 'user' | 'environment' | null | undefined;
+        cellPadding?: number | string | null | undefined;
+        cellSpacing?: number | string | null | undefined;
+        charSet?: string | null | undefined;
+        challenge?: string | null | undefined;
+        checked?: boolean | null | undefined;
+        cite?: string | null | undefined;
+        classID?: string | null | undefined;
+        cols?: number | null | undefined;
+        colSpan?: number | null | undefined;
+        content?: string | null | undefined;
+        controls?: boolean | null | undefined;
+        coords?: string | null | undefined;
+        crossOrigin?: string | null | undefined;
+        data?: string | null | undefined;
+        dateTime?: string | null | undefined;
+        default?: boolean | null | undefined;
+        defer?: boolean | null | undefined;
+        disabled?: boolean | null | undefined;
         download?: any;
-        encType?: string | undefined;
-        form?: string | undefined;
-        formAction?: string | undefined;
-        formEncType?: string | undefined;
-        formMethod?: string | undefined;
-        formNoValidate?: boolean | undefined;
-        formTarget?: string | undefined;
-        frameBorder?: number | string | undefined;
-        headers?: string | undefined;
-        height?: number | string | undefined;
-        high?: number | undefined;
-        href?: string | undefined;
-        hrefLang?: string | undefined;
-        htmlFor?: string | undefined;
-        httpEquiv?: string | undefined;
-        integrity?: string | undefined;
-        keyParams?: string | undefined;
-        keyType?: string | undefined;
-        kind?: string | undefined;
-        label?: string | undefined;
-        list?: string | undefined;
-        loop?: boolean | undefined;
-        low?: number | undefined;
-        manifest?: string | undefined;
-        marginHeight?: number | undefined;
-        marginWidth?: number | undefined;
-        max?: number | string | undefined;
-        maxLength?: number | undefined;
-        media?: string | undefined;
-        mediaGroup?: string | undefined;
-        method?: string | undefined;
-        min?: number | string | undefined;
-        minLength?: number | undefined;
-        multiple?: boolean | undefined;
-        muted?: boolean | undefined;
-        name?: string | undefined;
-        noValidate?: boolean | undefined;
-        open?: boolean | undefined;
-        optimum?: number | undefined;
-        pattern?: string | undefined;
-        placeholder?: string | undefined;
-        playsInline?: boolean | undefined;
-        poster?: string | undefined;
-        preload?: string | undefined;
-        readOnly?: boolean | undefined;
-        rel?: string | undefined;
-        required?: boolean | undefined;
-        reversed?: boolean | undefined;
-        rows?: number | undefined;
-        rowSpan?: number | undefined;
-        sandbox?: string | undefined;
-        scope?: string | undefined;
-        scoped?: boolean | undefined;
-        scrolling?: string | undefined;
-        seamless?: boolean | undefined;
-        selected?: boolean | undefined;
-        shape?: string | undefined;
-        size?: number | undefined;
-        sizes?: string | undefined;
-        span?: number | undefined;
-        src?: string | undefined;
-        srcDoc?: string | undefined;
-        srcLang?: string | undefined;
-        srcSet?: string | undefined;
-        start?: number | undefined;
-        step?: number | string | undefined;
-        summary?: string | undefined;
-        target?: string | undefined;
-        type?: string | undefined;
-        useMap?: string | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
-        width?: number | string | undefined;
-        wmode?: string | undefined;
-        wrap?: string | undefined;
+        encType?: string | null | undefined;
+        form?: string | null | undefined;
+        formAction?: string | null | undefined;
+        formEncType?: string | null | undefined;
+        formMethod?: string | null | undefined;
+        formNoValidate?: boolean | null | undefined;
+        formTarget?: string | null | undefined;
+        frameBorder?: number | string | null | undefined;
+        headers?: string | null | undefined;
+        height?: number | string | null | undefined;
+        high?: number | null | undefined;
+        href?: string | null | undefined;
+        hrefLang?: string | null | undefined;
+        htmlFor?: string | null | undefined;
+        httpEquiv?: string | null | undefined;
+        integrity?: string | null | undefined;
+        keyParams?: string | null | undefined;
+        keyType?: string | null | undefined;
+        kind?: string | null | undefined;
+        label?: string | null | undefined;
+        list?: string | null | undefined;
+        loop?: boolean | null | undefined;
+        low?: number | null | undefined;
+        manifest?: string | null | undefined;
+        marginHeight?: number | null | undefined;
+        marginWidth?: number | null | undefined;
+        max?: number | string | null | undefined;
+        maxLength?: number | null | undefined;
+        media?: string | null | undefined;
+        mediaGroup?: string | null | undefined;
+        method?: string | null | undefined;
+        min?: number | string | null | undefined;
+        minLength?: number | null | undefined;
+        multiple?: boolean | null | undefined;
+        muted?: boolean | null | undefined;
+        name?: string | null | undefined;
+        noValidate?: boolean | null | undefined;
+        open?: boolean | null | undefined;
+        optimum?: number | null | undefined;
+        pattern?: string | null | undefined;
+        placeholder?: string | null | undefined;
+        playsInline?: boolean | null | undefined;
+        poster?: string | null | undefined;
+        preload?: string | null | undefined;
+        readOnly?: boolean | null | undefined;
+        rel?: string | null | undefined;
+        required?: boolean | null | undefined;
+        reversed?: boolean | null | undefined;
+        rows?: number | null | undefined;
+        rowSpan?: number | null | undefined;
+        sandbox?: string | null | undefined;
+        scope?: string | null | undefined;
+        scoped?: boolean | null | undefined;
+        scrolling?: string | null | undefined;
+        seamless?: boolean | null | undefined;
+        selected?: boolean | null | undefined;
+        shape?: string | null | undefined;
+        size?: number | null | undefined;
+        sizes?: string | null | undefined;
+        span?: number | null | undefined;
+        src?: string | null | undefined;
+        srcDoc?: string | null | undefined;
+        srcLang?: string | null | undefined;
+        srcSet?: string | null | undefined;
+        start?: number | null | undefined;
+        step?: number | string | null | undefined;
+        summary?: string | null | undefined;
+        target?: string | null | undefined;
+        type?: string | null | undefined;
+        useMap?: string | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
+        width?: number | string | null | undefined;
+        wmode?: string | null | undefined;
+        wrap?: string | null | undefined;
     }
 
     type HTMLAttributeReferrerPolicy =
@@ -2038,157 +2038,157 @@ declare namespace React {
 
     interface AnchorHTMLAttributes<T> extends HTMLAttributes<T> {
         download?: any;
-        href?: string | undefined;
-        hrefLang?: string | undefined;
-        media?: string | undefined;
-        ping?: string | undefined;
-        rel?: string | undefined;
-        target?: HTMLAttributeAnchorTarget | undefined;
-        type?: string | undefined;
-        referrerPolicy?: HTMLAttributeReferrerPolicy | undefined;
+        href?: string | null | undefined;
+        hrefLang?: string | null | undefined;
+        media?: string | null | undefined;
+        ping?: string | null | undefined;
+        rel?: string | null | undefined;
+        target?: HTMLAttributeAnchorTarget | null | undefined;
+        type?: string | null | undefined;
+        referrerPolicy?: HTMLAttributeReferrerPolicy | null | undefined;
     }
 
     interface AudioHTMLAttributes<T> extends MediaHTMLAttributes<T> {}
 
     interface AreaHTMLAttributes<T> extends HTMLAttributes<T> {
-        alt?: string | undefined;
-        coords?: string | undefined;
+        alt?: string | null | undefined;
+        coords?: string | null | undefined;
         download?: any;
-        href?: string | undefined;
-        hrefLang?: string | undefined;
-        media?: string | undefined;
-        referrerPolicy?: HTMLAttributeReferrerPolicy | undefined;
-        rel?: string | undefined;
-        shape?: string | undefined;
-        target?: string | undefined;
+        href?: string | null | undefined;
+        hrefLang?: string | null | undefined;
+        media?: string | null | undefined;
+        referrerPolicy?: HTMLAttributeReferrerPolicy | null | undefined;
+        rel?: string | null | undefined;
+        shape?: string | null | undefined;
+        target?: string | null | undefined;
     }
 
     interface BaseHTMLAttributes<T> extends HTMLAttributes<T> {
-        href?: string | undefined;
-        target?: string | undefined;
+        href?: string | null | undefined;
+        target?: string | null | undefined;
     }
 
     interface BlockquoteHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string | undefined;
+        cite?: string | null | undefined;
     }
 
     interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoFocus?: boolean | undefined;
-        disabled?: boolean | undefined;
-        form?: string | undefined;
-        formAction?: string | undefined;
-        formEncType?: string | undefined;
-        formMethod?: string | undefined;
-        formNoValidate?: boolean | undefined;
-        formTarget?: string | undefined;
-        name?: string | undefined;
-        type?: 'submit' | 'reset' | 'button' | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
+        autoFocus?: boolean | null | undefined;
+        disabled?: boolean | null | undefined;
+        form?: string | null | undefined;
+        formAction?: string | null | undefined;
+        formEncType?: string | null | undefined;
+        formMethod?: string | null | undefined;
+        formNoValidate?: boolean | null | undefined;
+        formTarget?: string | null | undefined;
+        name?: string | null | undefined;
+        type?: 'submit' | 'reset' | 'button' | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
     }
 
     interface CanvasHTMLAttributes<T> extends HTMLAttributes<T> {
-        height?: number | string | undefined;
-        width?: number | string | undefined;
+        height?: number | string | null | undefined;
+        width?: number | string | null | undefined;
     }
 
     interface ColHTMLAttributes<T> extends HTMLAttributes<T> {
-        span?: number | undefined;
-        width?: number | string | undefined;
+        span?: number | null | undefined;
+        width?: number | string | null | undefined;
     }
 
     interface ColgroupHTMLAttributes<T> extends HTMLAttributes<T> {
-        span?: number | undefined;
+        span?: number | null | undefined;
     }
 
     interface DataHTMLAttributes<T> extends HTMLAttributes<T> {
-        value?: string | ReadonlyArray<string> | number | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
     }
 
     interface DetailsHTMLAttributes<T> extends HTMLAttributes<T> {
-        open?: boolean | undefined;
-        onToggle?: ReactEventHandler<T> | undefined;
+        open?: boolean | null | undefined;
+        onToggle?: ReactEventHandler<T> | null | undefined;
     }
 
     interface DelHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string | undefined;
-        dateTime?: string | undefined;
+        cite?: string | null | undefined;
+        dateTime?: string | null | undefined;
     }
 
     interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
         onCancel?: ReactEventHandler<T> |  undefined;
         onClose?: ReactEventHandler<T> |  undefined;
-        open?: boolean | undefined;
+        open?: boolean | null | undefined;
     }
 
     interface EmbedHTMLAttributes<T> extends HTMLAttributes<T> {
-        height?: number | string | undefined;
-        src?: string | undefined;
-        type?: string | undefined;
-        width?: number | string | undefined;
+        height?: number | string | null | undefined;
+        src?: string | null | undefined;
+        type?: string | null | undefined;
+        width?: number | string | null | undefined;
     }
 
     interface FieldsetHTMLAttributes<T> extends HTMLAttributes<T> {
-        disabled?: boolean | undefined;
-        form?: string | undefined;
-        name?: string | undefined;
+        disabled?: boolean | null | undefined;
+        form?: string | null | undefined;
+        name?: string | null | undefined;
     }
 
     interface FormHTMLAttributes<T> extends HTMLAttributes<T> {
-        acceptCharset?: string | undefined;
-        action?: string | undefined;
-        autoComplete?: string | undefined;
-        encType?: string | undefined;
-        method?: string | undefined;
-        name?: string | undefined;
-        noValidate?: boolean | undefined;
-        target?: string | undefined;
-        rel?: string | undefined;
+        acceptCharset?: string | null | undefined;
+        action?: string | null | undefined;
+        autoComplete?: string | null | undefined;
+        encType?: string | null | undefined;
+        method?: string | null | undefined;
+        name?: string | null | undefined;
+        noValidate?: boolean | null | undefined;
+        target?: string | null | undefined;
+        rel?: string | null | undefined;
     }
 
     interface HtmlHTMLAttributes<T> extends HTMLAttributes<T> {
-        manifest?: string | undefined;
+        manifest?: string | null | undefined;
     }
 
     interface IframeHTMLAttributes<T> extends HTMLAttributes<T> {
-        allow?: string | undefined;
-        allowFullScreen?: boolean | undefined;
-        allowTransparency?: boolean | undefined;
+        allow?: string | null | undefined;
+        allowFullScreen?: boolean | null | undefined;
+        allowTransparency?: boolean | null | undefined;
         /** @deprecated */
-        frameBorder?: number | string | undefined;
-        height?: number | string | undefined;
-        loading?: "eager" | "lazy" | undefined;
+        frameBorder?: number | string | null | undefined;
+        height?: number | string | null | undefined;
+        loading?: "eager" | "lazy" | null | undefined;
         /** @deprecated */
-        marginHeight?: number | undefined;
+        marginHeight?: number | null | undefined;
         /** @deprecated */
-        marginWidth?: number | undefined;
-        name?: string | undefined;
-        referrerPolicy?: HTMLAttributeReferrerPolicy | undefined;
-        sandbox?: string | undefined;
+        marginWidth?: number | null | undefined;
+        name?: string | null | undefined;
+        referrerPolicy?: HTMLAttributeReferrerPolicy | null | undefined;
+        sandbox?: string | null | undefined;
         /** @deprecated */
-        scrolling?: string | undefined;
-        seamless?: boolean | undefined;
-        src?: string | undefined;
-        srcDoc?: string | undefined;
-        width?: number | string | undefined;
+        scrolling?: string | null | undefined;
+        seamless?: boolean | null | undefined;
+        src?: string | null | undefined;
+        srcDoc?: string | null | undefined;
+        width?: number | string | null | undefined;
     }
 
     interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
-        alt?: string | undefined;
-        crossOrigin?: "anonymous" | "use-credentials" | "" | undefined;
-        decoding?: "async" | "auto" | "sync" | undefined;
-        height?: number | string | undefined;
-        loading?: "eager" | "lazy" | undefined;
-        referrerPolicy?: HTMLAttributeReferrerPolicy | undefined;
-        sizes?: string | undefined;
-        src?: string | undefined;
-        srcSet?: string | undefined;
-        useMap?: string | undefined;
-        width?: number | string | undefined;
+        alt?: string | null | undefined;
+        crossOrigin?: "anonymous" | "use-credentials" | "" | null | undefined;
+        decoding?: "async" | "auto" | "sync" | null | undefined;
+        height?: number | string | null | undefined;
+        loading?: "eager" | "lazy" | null | undefined;
+        referrerPolicy?: HTMLAttributeReferrerPolicy | null | undefined;
+        sizes?: string | null | undefined;
+        src?: string | null | undefined;
+        srcSet?: string | null | undefined;
+        useMap?: string | null | undefined;
+        width?: number | string | null | undefined;
     }
 
     interface InsHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string | undefined;
-        dateTime?: string | undefined;
+        cite?: string | null | undefined;
+        dateTime?: string | null | undefined;
     }
 
     type HTMLInputTypeAttribute =
@@ -2217,285 +2217,285 @@ declare namespace React {
         | (string & {});
 
     interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
-        accept?: string | undefined;
-        alt?: string | undefined;
-        autoComplete?: string | undefined;
-        autoFocus?: boolean | undefined;
-        capture?: boolean | 'user' | 'environment' | undefined; // https://www.w3.org/TR/html-media-capture/#the-capture-attribute
-        checked?: boolean | undefined;
-        crossOrigin?: string | undefined;
-        disabled?: boolean | undefined;
-        enterKeyHint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | undefined;
-        form?: string | undefined;
-        formAction?: string | undefined;
-        formEncType?: string | undefined;
-        formMethod?: string | undefined;
-        formNoValidate?: boolean | undefined;
-        formTarget?: string | undefined;
-        height?: number | string | undefined;
-        list?: string | undefined;
-        max?: number | string | undefined;
-        maxLength?: number | undefined;
-        min?: number | string | undefined;
-        minLength?: number | undefined;
-        multiple?: boolean | undefined;
-        name?: string | undefined;
-        pattern?: string | undefined;
-        placeholder?: string | undefined;
-        readOnly?: boolean | undefined;
-        required?: boolean | undefined;
-        size?: number | undefined;
-        src?: string | undefined;
-        step?: number | string | undefined;
-        type?: HTMLInputTypeAttribute | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
-        width?: number | string | undefined;
+        accept?: string | null | undefined;
+        alt?: string | null | undefined;
+        autoComplete?: string | null | undefined;
+        autoFocus?: boolean | null | undefined;
+        capture?: boolean | 'user' | 'environment' | null | undefined; // https://www.w3.org/TR/html-media-capture/#the-capture-attribute
+        checked?: boolean | null | undefined;
+        crossOrigin?: string | null | undefined;
+        disabled?: boolean | null | undefined;
+        enterKeyHint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null | undefined;
+        form?: string | null | undefined;
+        formAction?: string | null | undefined;
+        formEncType?: string | null | undefined;
+        formMethod?: string | null | undefined;
+        formNoValidate?: boolean | null | undefined;
+        formTarget?: string | null | undefined;
+        height?: number | string | null | undefined;
+        list?: string | null | undefined;
+        max?: number | string | null | undefined;
+        maxLength?: number | null | undefined;
+        min?: number | string | null | undefined;
+        minLength?: number | null | undefined;
+        multiple?: boolean | null | undefined;
+        name?: string | null | undefined;
+        pattern?: string | null | undefined;
+        placeholder?: string | null | undefined;
+        readOnly?: boolean | null | undefined;
+        required?: boolean | null | undefined;
+        size?: number | null | undefined;
+        src?: string | null | undefined;
+        step?: number | string | null | undefined;
+        type?: HTMLInputTypeAttribute | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
+        width?: number | string | null | undefined;
 
-        onChange?: ChangeEventHandler<T> | undefined;
+        onChange?: ChangeEventHandler<T> | null | undefined;
     }
 
     interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoFocus?: boolean | undefined;
-        challenge?: string | undefined;
-        disabled?: boolean | undefined;
-        form?: string | undefined;
-        keyType?: string | undefined;
-        keyParams?: string | undefined;
-        name?: string | undefined;
+        autoFocus?: boolean | null | undefined;
+        challenge?: string | null | undefined;
+        disabled?: boolean | null | undefined;
+        form?: string | null | undefined;
+        keyType?: string | null | undefined;
+        keyParams?: string | null | undefined;
+        name?: string | null | undefined;
     }
 
     interface LabelHTMLAttributes<T> extends HTMLAttributes<T> {
-        form?: string | undefined;
-        htmlFor?: string | undefined;
+        form?: string | null | undefined;
+        htmlFor?: string | null | undefined;
     }
 
     interface LiHTMLAttributes<T> extends HTMLAttributes<T> {
-        value?: string | ReadonlyArray<string> | number | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
     }
 
     interface LinkHTMLAttributes<T> extends HTMLAttributes<T> {
-        as?: string | undefined;
-        crossOrigin?: string | undefined;
-        href?: string | undefined;
-        hrefLang?: string | undefined;
-        integrity?: string | undefined;
-        media?: string | undefined;
-        imageSrcSet?: string | undefined;
-        imageSizes?: string | undefined;
-        referrerPolicy?: HTMLAttributeReferrerPolicy | undefined;
-        rel?: string | undefined;
-        sizes?: string | undefined;
-        type?: string | undefined;
-        charSet?: string | undefined;
+        as?: string | null | undefined;
+        crossOrigin?: string | null | undefined;
+        href?: string | null | undefined;
+        hrefLang?: string | null | undefined;
+        integrity?: string | null | undefined;
+        media?: string | null | undefined;
+        imageSrcSet?: string | null | undefined;
+        imageSizes?: string | null | undefined;
+        referrerPolicy?: HTMLAttributeReferrerPolicy | null | undefined;
+        rel?: string | null | undefined;
+        sizes?: string | null | undefined;
+        type?: string | null | undefined;
+        charSet?: string | null | undefined;
     }
 
     interface MapHTMLAttributes<T> extends HTMLAttributes<T> {
-        name?: string | undefined;
+        name?: string | null | undefined;
     }
 
     interface MenuHTMLAttributes<T> extends HTMLAttributes<T> {
-        type?: string | undefined;
+        type?: string | null | undefined;
     }
 
     interface MediaHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoPlay?: boolean | undefined;
-        controls?: boolean | undefined;
-        controlsList?: string | undefined;
-        crossOrigin?: string | undefined;
-        loop?: boolean | undefined;
-        mediaGroup?: string | undefined;
-        muted?: boolean | undefined;
-        playsInline?: boolean | undefined;
-        preload?: string | undefined;
-        src?: string | undefined;
+        autoPlay?: boolean | null | undefined;
+        controls?: boolean | null | undefined;
+        controlsList?: string | null | undefined;
+        crossOrigin?: string | null | undefined;
+        loop?: boolean | null | undefined;
+        mediaGroup?: string | null | undefined;
+        muted?: boolean | null | undefined;
+        playsInline?: boolean | null | undefined;
+        preload?: string | null | undefined;
+        src?: string | null | undefined;
     }
 
     interface MetaHTMLAttributes<T> extends HTMLAttributes<T> {
-        charSet?: string | undefined;
-        content?: string | undefined;
-        httpEquiv?: string | undefined;
-        name?: string | undefined;
-        media?: string | undefined;
+        charSet?: string | null | undefined;
+        content?: string | null | undefined;
+        httpEquiv?: string | null | undefined;
+        name?: string | null | undefined;
+        media?: string | null | undefined;
     }
 
     interface MeterHTMLAttributes<T> extends HTMLAttributes<T> {
-        form?: string | undefined;
-        high?: number | undefined;
-        low?: number | undefined;
-        max?: number | string | undefined;
-        min?: number | string | undefined;
-        optimum?: number | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
+        form?: string | null | undefined;
+        high?: number | null | undefined;
+        low?: number | null | undefined;
+        max?: number | string | null | undefined;
+        min?: number | string | null | undefined;
+        optimum?: number | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
     }
 
     interface QuoteHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string | undefined;
+        cite?: string | null | undefined;
     }
 
     interface ObjectHTMLAttributes<T> extends HTMLAttributes<T> {
-        classID?: string | undefined;
-        data?: string | undefined;
-        form?: string | undefined;
-        height?: number | string | undefined;
-        name?: string | undefined;
-        type?: string | undefined;
-        useMap?: string | undefined;
-        width?: number | string | undefined;
-        wmode?: string | undefined;
+        classID?: string | null | undefined;
+        data?: string | null | undefined;
+        form?: string | null | undefined;
+        height?: number | string | null | undefined;
+        name?: string | null | undefined;
+        type?: string | null | undefined;
+        useMap?: string | null | undefined;
+        width?: number | string | null | undefined;
+        wmode?: string | null | undefined;
     }
 
     interface OlHTMLAttributes<T> extends HTMLAttributes<T> {
-        reversed?: boolean | undefined;
-        start?: number | undefined;
-        type?: '1' | 'a' | 'A' | 'i' | 'I' | undefined;
+        reversed?: boolean | null | undefined;
+        start?: number | null | undefined;
+        type?: '1' | 'a' | 'A' | 'i' | 'I' | null | undefined;
     }
 
     interface OptgroupHTMLAttributes<T> extends HTMLAttributes<T> {
-        disabled?: boolean | undefined;
-        label?: string | undefined;
+        disabled?: boolean | null | undefined;
+        label?: string | null | undefined;
     }
 
     interface OptionHTMLAttributes<T> extends HTMLAttributes<T> {
-        disabled?: boolean | undefined;
-        label?: string | undefined;
-        selected?: boolean | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
+        disabled?: boolean | null | undefined;
+        label?: string | null | undefined;
+        selected?: boolean | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
     }
 
     interface OutputHTMLAttributes<T> extends HTMLAttributes<T> {
-        form?: string | undefined;
-        htmlFor?: string | undefined;
-        name?: string | undefined;
+        form?: string | null | undefined;
+        htmlFor?: string | null | undefined;
+        name?: string | null | undefined;
     }
 
     interface ParamHTMLAttributes<T> extends HTMLAttributes<T> {
-        name?: string | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
+        name?: string | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
     }
 
     interface ProgressHTMLAttributes<T> extends HTMLAttributes<T> {
-        max?: number | string | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
+        max?: number | string | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
     }
 
     interface SlotHTMLAttributes<T> extends HTMLAttributes<T> {
-        name?: string | undefined;
+        name?: string | null | undefined;
     }
 
     interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
-        async?: boolean | undefined;
+        async?: boolean | null | undefined;
         /** @deprecated */
-        charSet?: string | undefined;
-        crossOrigin?: string | undefined;
-        defer?: boolean | undefined;
-        integrity?: string | undefined;
-        noModule?: boolean | undefined;
-        referrerPolicy?: HTMLAttributeReferrerPolicy | undefined;
-        src?: string | undefined;
-        type?: string | undefined;
+        charSet?: string | null | undefined;
+        crossOrigin?: string | null | undefined;
+        defer?: boolean | null | undefined;
+        integrity?: string | null | undefined;
+        noModule?: boolean | null | undefined;
+        referrerPolicy?: HTMLAttributeReferrerPolicy | null | undefined;
+        src?: string | null | undefined;
+        type?: string | null | undefined;
     }
 
     interface SelectHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoComplete?: string | undefined;
-        autoFocus?: boolean | undefined;
-        disabled?: boolean | undefined;
-        form?: string | undefined;
-        multiple?: boolean | undefined;
-        name?: string | undefined;
-        required?: boolean | undefined;
-        size?: number | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
-        onChange?: ChangeEventHandler<T> | undefined;
+        autoComplete?: string | null | undefined;
+        autoFocus?: boolean | null | undefined;
+        disabled?: boolean | null | undefined;
+        form?: string | null | undefined;
+        multiple?: boolean | null | undefined;
+        name?: string | null | undefined;
+        required?: boolean | null | undefined;
+        size?: number | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
+        onChange?: ChangeEventHandler<T> | null | undefined;
     }
 
     interface SourceHTMLAttributes<T> extends HTMLAttributes<T> {
-        height?: number | string | undefined;
-        media?: string | undefined;
-        sizes?: string | undefined;
-        src?: string | undefined;
-        srcSet?: string | undefined;
-        type?: string | undefined;
-        width?: number | string | undefined;
+        height?: number | string | null | undefined;
+        media?: string | null | undefined;
+        sizes?: string | null | undefined;
+        src?: string | null | undefined;
+        srcSet?: string | null | undefined;
+        type?: string | null | undefined;
+        width?: number | string | null | undefined;
     }
 
     interface StyleHTMLAttributes<T> extends HTMLAttributes<T> {
-        media?: string | undefined;
-        scoped?: boolean | undefined;
-        type?: string | undefined;
+        media?: string | null | undefined;
+        scoped?: boolean | null | undefined;
+        type?: string | null | undefined;
     }
 
     interface TableHTMLAttributes<T> extends HTMLAttributes<T> {
-        align?: "left" | "center" | "right" | undefined;
-        bgcolor?: string | undefined;
-        border?: number | undefined;
-        cellPadding?: number | string | undefined;
-        cellSpacing?: number | string | undefined;
-        frame?: boolean | undefined;
-        rules?: "none" | "groups" | "rows" | "columns" | "all" | undefined;
-        summary?: string | undefined;
-        width?: number | string | undefined;
+        align?: "left" | "center" | "right" | null | undefined;
+        bgcolor?: string | null | undefined;
+        border?: number | null | undefined;
+        cellPadding?: number | string | null | undefined;
+        cellSpacing?: number | string | null | undefined;
+        frame?: boolean | null | undefined;
+        rules?: "none" | "groups" | "rows" | "columns" | "all" | null | undefined;
+        summary?: string | null | undefined;
+        width?: number | string | null | undefined;
     }
 
     interface TextareaHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoComplete?: string | undefined;
-        autoFocus?: boolean | undefined;
-        cols?: number | undefined;
-        dirName?: string | undefined;
-        disabled?: boolean | undefined;
-        form?: string | undefined;
-        maxLength?: number | undefined;
-        minLength?: number | undefined;
-        name?: string | undefined;
-        placeholder?: string | undefined;
-        readOnly?: boolean | undefined;
-        required?: boolean | undefined;
-        rows?: number | undefined;
-        value?: string | ReadonlyArray<string> | number | undefined;
-        wrap?: string | undefined;
+        autoComplete?: string | null | undefined;
+        autoFocus?: boolean | null | undefined;
+        cols?: number | null | undefined;
+        dirName?: string | null | undefined;
+        disabled?: boolean | null | undefined;
+        form?: string | null | undefined;
+        maxLength?: number | null | undefined;
+        minLength?: number | null | undefined;
+        name?: string | null | undefined;
+        placeholder?: string | null | undefined;
+        readOnly?: boolean | null | undefined;
+        required?: boolean | null | undefined;
+        rows?: number | null | undefined;
+        value?: string | ReadonlyArray<string> | number | null | undefined;
+        wrap?: string | null | undefined;
 
-        onChange?: ChangeEventHandler<T> | undefined;
+        onChange?: ChangeEventHandler<T> | null | undefined;
     }
 
     interface TdHTMLAttributes<T> extends HTMLAttributes<T> {
-        align?: "left" | "center" | "right" | "justify" | "char" | undefined;
-        colSpan?: number | undefined;
-        headers?: string | undefined;
-        rowSpan?: number | undefined;
-        scope?: string | undefined;
-        abbr?: string | undefined;
-        height?: number | string | undefined;
-        width?: number | string | undefined;
-        valign?: "top" | "middle" | "bottom" | "baseline" | undefined;
+        align?: "left" | "center" | "right" | "justify" | "char" | null | undefined;
+        colSpan?: number | null | undefined;
+        headers?: string | null | undefined;
+        rowSpan?: number | null | undefined;
+        scope?: string | null | undefined;
+        abbr?: string | null | undefined;
+        height?: number | string | null | undefined;
+        width?: number | string | null | undefined;
+        valign?: "top" | "middle" | "bottom" | "baseline" | null | undefined;
     }
 
     interface ThHTMLAttributes<T> extends HTMLAttributes<T> {
-        align?: "left" | "center" | "right" | "justify" | "char" | undefined;
-        colSpan?: number | undefined;
-        headers?: string | undefined;
-        rowSpan?: number | undefined;
-        scope?: string | undefined;
-        abbr?: string | undefined;
+        align?: "left" | "center" | "right" | "justify" | "char" | null | undefined;
+        colSpan?: number | null | undefined;
+        headers?: string | null | undefined;
+        rowSpan?: number | null | undefined;
+        scope?: string | null | undefined;
+        abbr?: string | null | undefined;
     }
 
     interface TimeHTMLAttributes<T> extends HTMLAttributes<T> {
-        dateTime?: string | undefined;
+        dateTime?: string | null | undefined;
     }
 
     interface TrackHTMLAttributes<T> extends HTMLAttributes<T> {
-        default?: boolean | undefined;
-        kind?: string | undefined;
-        label?: string | undefined;
-        src?: string | undefined;
-        srcLang?: string | undefined;
+        default?: boolean | null | undefined;
+        kind?: string | null | undefined;
+        label?: string | null | undefined;
+        src?: string | null | undefined;
+        srcLang?: string | null | undefined;
     }
 
     interface VideoHTMLAttributes<T> extends MediaHTMLAttributes<T> {
-        height?: number | string | undefined;
-        playsInline?: boolean | undefined;
-        poster?: string | undefined;
-        width?: number | string | undefined;
-        disablePictureInPicture?: boolean | undefined;
-        disableRemotePlayback?: boolean | undefined;
+        height?: number | string | null | undefined;
+        playsInline?: boolean | null | undefined;
+        poster?: string | null | undefined;
+        width?: number | string | null | undefined;
+        disablePictureInPicture?: boolean | null | undefined;
+        disableRemotePlayback?: boolean | null | undefined;
     }
 
     // this list is "complete" in that it contains every SVG attribute
@@ -2509,290 +2509,290 @@ declare namespace React {
     interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
         // Attributes which also defined in HTMLAttributes
         // See comment in SVGDOMPropertyConfig.js
-        className?: string | undefined;
-        color?: string | undefined;
-        height?: number | string | undefined;
-        id?: string | undefined;
-        lang?: string | undefined;
-        max?: number | string | undefined;
-        media?: string | undefined;
-        method?: string | undefined;
-        min?: number | string | undefined;
-        name?: string | undefined;
-        style?: CSSProperties | undefined;
-        target?: string | undefined;
-        type?: string | undefined;
-        width?: number | string | undefined;
+        className?: string | null | undefined;
+        color?: string | null | undefined;
+        height?: number | string | null | undefined;
+        id?: string | null | undefined;
+        lang?: string | null | undefined;
+        max?: number | string | null | undefined;
+        media?: string | null | undefined;
+        method?: string | null | undefined;
+        min?: number | string | null | undefined;
+        name?: string | null | undefined;
+        style?: CSSProperties | null | undefined;
+        target?: string | null | undefined;
+        type?: string | null | undefined;
+        width?: number | string | null | undefined;
 
         // Other HTML properties supported by SVG elements in browsers
-        role?: AriaRole | undefined;
-        tabIndex?: number | undefined;
-        crossOrigin?: "anonymous" | "use-credentials" | "" | undefined;
+        role?: AriaRole | null | undefined;
+        tabIndex?: number | null | undefined;
+        crossOrigin?: "anonymous" | "use-credentials" | "" | null | undefined;
 
         // SVG Specific attributes
-        accentHeight?: number | string | undefined;
-        accumulate?: "none" | "sum" | undefined;
-        additive?: "replace" | "sum" | undefined;
+        accentHeight?: number | string | null | undefined;
+        accumulate?: "none" | "sum" | null | undefined;
+        additive?: "replace" | "sum" | null | undefined;
         alignmentBaseline?: "auto" | "baseline" | "before-edge" | "text-before-edge" | "middle" | "central" | "after-edge" |
-        "text-after-edge" | "ideographic" | "alphabetic" | "hanging" | "mathematical" | "inherit" | undefined;
-        allowReorder?: "no" | "yes" | undefined;
-        alphabetic?: number | string | undefined;
-        amplitude?: number | string | undefined;
-        arabicForm?: "initial" | "medial" | "terminal" | "isolated" | undefined;
-        ascent?: number | string | undefined;
-        attributeName?: string | undefined;
-        attributeType?: string | undefined;
-        autoReverse?: Booleanish | undefined;
-        azimuth?: number | string | undefined;
-        baseFrequency?: number | string | undefined;
-        baselineShift?: number | string | undefined;
-        baseProfile?: number | string | undefined;
-        bbox?: number | string | undefined;
-        begin?: number | string | undefined;
-        bias?: number | string | undefined;
-        by?: number | string | undefined;
-        calcMode?: number | string | undefined;
-        capHeight?: number | string | undefined;
-        clip?: number | string | undefined;
-        clipPath?: string | undefined;
-        clipPathUnits?: number | string | undefined;
-        clipRule?: number | string | undefined;
-        colorInterpolation?: number | string | undefined;
-        colorInterpolationFilters?: "auto" | "sRGB" | "linearRGB" | "inherit" | undefined;
-        colorProfile?: number | string | undefined;
-        colorRendering?: number | string | undefined;
-        contentScriptType?: number | string | undefined;
-        contentStyleType?: number | string | undefined;
-        cursor?: number | string | undefined;
-        cx?: number | string | undefined;
-        cy?: number | string | undefined;
-        d?: string | undefined;
-        decelerate?: number | string | undefined;
-        descent?: number | string | undefined;
-        diffuseConstant?: number | string | undefined;
-        direction?: number | string | undefined;
-        display?: number | string | undefined;
-        divisor?: number | string | undefined;
-        dominantBaseline?: number | string | undefined;
-        dur?: number | string | undefined;
-        dx?: number | string | undefined;
-        dy?: number | string | undefined;
-        edgeMode?: number | string | undefined;
-        elevation?: number | string | undefined;
-        enableBackground?: number | string | undefined;
-        end?: number | string | undefined;
-        exponent?: number | string | undefined;
-        externalResourcesRequired?: Booleanish | undefined;
-        fill?: string | undefined;
-        fillOpacity?: number | string | undefined;
-        fillRule?: "nonzero" | "evenodd" | "inherit" | undefined;
-        filter?: string | undefined;
-        filterRes?: number | string | undefined;
-        filterUnits?: number | string | undefined;
-        floodColor?: number | string | undefined;
-        floodOpacity?: number | string | undefined;
-        focusable?: Booleanish | "auto" | undefined;
-        fontFamily?: string | undefined;
-        fontSize?: number | string | undefined;
-        fontSizeAdjust?: number | string | undefined;
-        fontStretch?: number | string | undefined;
-        fontStyle?: number | string | undefined;
-        fontVariant?: number | string | undefined;
-        fontWeight?: number | string | undefined;
-        format?: number | string | undefined;
-        fr?: number | string | undefined;
-        from?: number | string | undefined;
-        fx?: number | string | undefined;
-        fy?: number | string | undefined;
-        g1?: number | string | undefined;
-        g2?: number | string | undefined;
-        glyphName?: number | string | undefined;
-        glyphOrientationHorizontal?: number | string | undefined;
-        glyphOrientationVertical?: number | string | undefined;
-        glyphRef?: number | string | undefined;
-        gradientTransform?: string | undefined;
-        gradientUnits?: string | undefined;
-        hanging?: number | string | undefined;
-        horizAdvX?: number | string | undefined;
-        horizOriginX?: number | string | undefined;
-        href?: string | undefined;
-        ideographic?: number | string | undefined;
-        imageRendering?: number | string | undefined;
-        in2?: number | string | undefined;
-        in?: string | undefined;
-        intercept?: number | string | undefined;
-        k1?: number | string | undefined;
-        k2?: number | string | undefined;
-        k3?: number | string | undefined;
-        k4?: number | string | undefined;
-        k?: number | string | undefined;
-        kernelMatrix?: number | string | undefined;
-        kernelUnitLength?: number | string | undefined;
-        kerning?: number | string | undefined;
-        keyPoints?: number | string | undefined;
-        keySplines?: number | string | undefined;
-        keyTimes?: number | string | undefined;
-        lengthAdjust?: number | string | undefined;
-        letterSpacing?: number | string | undefined;
-        lightingColor?: number | string | undefined;
-        limitingConeAngle?: number | string | undefined;
-        local?: number | string | undefined;
-        markerEnd?: string | undefined;
-        markerHeight?: number | string | undefined;
-        markerMid?: string | undefined;
-        markerStart?: string | undefined;
-        markerUnits?: number | string | undefined;
-        markerWidth?: number | string | undefined;
-        mask?: string | undefined;
-        maskContentUnits?: number | string | undefined;
-        maskUnits?: number | string | undefined;
-        mathematical?: number | string | undefined;
-        mode?: number | string | undefined;
-        numOctaves?: number | string | undefined;
-        offset?: number | string | undefined;
-        opacity?: number | string | undefined;
-        operator?: number | string | undefined;
-        order?: number | string | undefined;
-        orient?: number | string | undefined;
-        orientation?: number | string | undefined;
-        origin?: number | string | undefined;
-        overflow?: number | string | undefined;
-        overlinePosition?: number | string | undefined;
-        overlineThickness?: number | string | undefined;
-        paintOrder?: number | string | undefined;
-        panose1?: number | string | undefined;
-        path?: string | undefined;
-        pathLength?: number | string | undefined;
-        patternContentUnits?: string | undefined;
-        patternTransform?: number | string | undefined;
-        patternUnits?: string | undefined;
-        pointerEvents?: number | string | undefined;
-        points?: string | undefined;
-        pointsAtX?: number | string | undefined;
-        pointsAtY?: number | string | undefined;
-        pointsAtZ?: number | string | undefined;
-        preserveAlpha?: Booleanish | undefined;
-        preserveAspectRatio?: string | undefined;
-        primitiveUnits?: number | string | undefined;
-        r?: number | string | undefined;
-        radius?: number | string | undefined;
-        refX?: number | string | undefined;
-        refY?: number | string | undefined;
-        renderingIntent?: number | string | undefined;
-        repeatCount?: number | string | undefined;
-        repeatDur?: number | string | undefined;
-        requiredExtensions?: number | string | undefined;
-        requiredFeatures?: number | string | undefined;
-        restart?: number | string | undefined;
-        result?: string | undefined;
-        rotate?: number | string | undefined;
-        rx?: number | string | undefined;
-        ry?: number | string | undefined;
-        scale?: number | string | undefined;
-        seed?: number | string | undefined;
-        shapeRendering?: number | string | undefined;
-        slope?: number | string | undefined;
-        spacing?: number | string | undefined;
-        specularConstant?: number | string | undefined;
-        specularExponent?: number | string | undefined;
-        speed?: number | string | undefined;
-        spreadMethod?: string | undefined;
-        startOffset?: number | string | undefined;
-        stdDeviation?: number | string | undefined;
-        stemh?: number | string | undefined;
-        stemv?: number | string | undefined;
-        stitchTiles?: number | string | undefined;
-        stopColor?: string | undefined;
-        stopOpacity?: number | string | undefined;
-        strikethroughPosition?: number | string | undefined;
-        strikethroughThickness?: number | string | undefined;
-        string?: number | string | undefined;
-        stroke?: string | undefined;
-        strokeDasharray?: string | number | undefined;
-        strokeDashoffset?: string | number | undefined;
-        strokeLinecap?: "butt" | "round" | "square" | "inherit" | undefined;
-        strokeLinejoin?: "miter" | "round" | "bevel" | "inherit" | undefined;
-        strokeMiterlimit?: number | string | undefined;
-        strokeOpacity?: number | string | undefined;
-        strokeWidth?: number | string | undefined;
-        surfaceScale?: number | string | undefined;
-        systemLanguage?: number | string | undefined;
-        tableValues?: number | string | undefined;
-        targetX?: number | string | undefined;
-        targetY?: number | string | undefined;
-        textAnchor?: string | undefined;
-        textDecoration?: number | string | undefined;
-        textLength?: number | string | undefined;
-        textRendering?: number | string | undefined;
-        to?: number | string | undefined;
-        transform?: string | undefined;
-        u1?: number | string | undefined;
-        u2?: number | string | undefined;
-        underlinePosition?: number | string | undefined;
-        underlineThickness?: number | string | undefined;
-        unicode?: number | string | undefined;
-        unicodeBidi?: number | string | undefined;
-        unicodeRange?: number | string | undefined;
-        unitsPerEm?: number | string | undefined;
-        vAlphabetic?: number | string | undefined;
-        values?: string | undefined;
-        vectorEffect?: number | string | undefined;
-        version?: string | undefined;
-        vertAdvY?: number | string | undefined;
-        vertOriginX?: number | string | undefined;
-        vertOriginY?: number | string | undefined;
-        vHanging?: number | string | undefined;
-        vIdeographic?: number | string | undefined;
-        viewBox?: string | undefined;
-        viewTarget?: number | string | undefined;
-        visibility?: number | string | undefined;
-        vMathematical?: number | string | undefined;
-        widths?: number | string | undefined;
-        wordSpacing?: number | string | undefined;
-        writingMode?: number | string | undefined;
-        x1?: number | string | undefined;
-        x2?: number | string | undefined;
-        x?: number | string | undefined;
-        xChannelSelector?: string | undefined;
-        xHeight?: number | string | undefined;
-        xlinkActuate?: string | undefined;
-        xlinkArcrole?: string | undefined;
-        xlinkHref?: string | undefined;
-        xlinkRole?: string | undefined;
-        xlinkShow?: string | undefined;
-        xlinkTitle?: string | undefined;
-        xlinkType?: string | undefined;
-        xmlBase?: string | undefined;
-        xmlLang?: string | undefined;
-        xmlns?: string | undefined;
-        xmlnsXlink?: string | undefined;
-        xmlSpace?: string | undefined;
-        y1?: number | string | undefined;
-        y2?: number | string | undefined;
-        y?: number | string | undefined;
-        yChannelSelector?: string | undefined;
-        z?: number | string | undefined;
-        zoomAndPan?: string | undefined;
+        "text-after-edge" | "ideographic" | "alphabetic" | "hanging" | "mathematical" | "inherit" | null | undefined;
+        allowReorder?: "no" | "yes" | null | undefined;
+        alphabetic?: number | string | null | undefined;
+        amplitude?: number | string | null | undefined;
+        arabicForm?: "initial" | "medial" | "terminal" | "isolated" | null | undefined;
+        ascent?: number | string | null | undefined;
+        attributeName?: string | null | undefined;
+        attributeType?: string | null | undefined;
+        autoReverse?: Booleanish | null | undefined;
+        azimuth?: number | string | null | undefined;
+        baseFrequency?: number | string | null | undefined;
+        baselineShift?: number | string | null | undefined;
+        baseProfile?: number | string | null | undefined;
+        bbox?: number | string | null | undefined;
+        begin?: number | string | null | undefined;
+        bias?: number | string | null | undefined;
+        by?: number | string | null | undefined;
+        calcMode?: number | string | null | undefined;
+        capHeight?: number | string | null | undefined;
+        clip?: number | string | null | undefined;
+        clipPath?: string | null | undefined;
+        clipPathUnits?: number | string | null | undefined;
+        clipRule?: number | string | null | undefined;
+        colorInterpolation?: number | string | null | undefined;
+        colorInterpolationFilters?: "auto" | "sRGB" | "linearRGB" | "inherit" | null | undefined;
+        colorProfile?: number | string | null | undefined;
+        colorRendering?: number | string | null | undefined;
+        contentScriptType?: number | string | null | undefined;
+        contentStyleType?: number | string | null | undefined;
+        cursor?: number | string | null | undefined;
+        cx?: number | string | null | undefined;
+        cy?: number | string | null | undefined;
+        d?: string | null | undefined;
+        decelerate?: number | string | null | undefined;
+        descent?: number | string | null | undefined;
+        diffuseConstant?: number | string | null | undefined;
+        direction?: number | string | null | undefined;
+        display?: number | string | null | undefined;
+        divisor?: number | string | null | undefined;
+        dominantBaseline?: number | string | null | undefined;
+        dur?: number | string | null | undefined;
+        dx?: number | string | null | undefined;
+        dy?: number | string | null | undefined;
+        edgeMode?: number | string | null | undefined;
+        elevation?: number | string | null | undefined;
+        enableBackground?: number | string | null | undefined;
+        end?: number | string | null | undefined;
+        exponent?: number | string | null | undefined;
+        externalResourcesRequired?: Booleanish | null | undefined;
+        fill?: string | null | undefined;
+        fillOpacity?: number | string | null | undefined;
+        fillRule?: "nonzero" | "evenodd" | "inherit" | null | undefined;
+        filter?: string | null | undefined;
+        filterRes?: number | string | null | undefined;
+        filterUnits?: number | string | null | undefined;
+        floodColor?: number | string | null | undefined;
+        floodOpacity?: number | string | null | undefined;
+        focusable?: Booleanish | "auto" | null | undefined;
+        fontFamily?: string | null | undefined;
+        fontSize?: number | string | null | undefined;
+        fontSizeAdjust?: number | string | null | undefined;
+        fontStretch?: number | string | null | undefined;
+        fontStyle?: number | string | null | undefined;
+        fontVariant?: number | string | null | undefined;
+        fontWeight?: number | string | null | undefined;
+        format?: number | string | null | undefined;
+        fr?: number | string | null | undefined;
+        from?: number | string | null | undefined;
+        fx?: number | string | null | undefined;
+        fy?: number | string | null | undefined;
+        g1?: number | string | null | undefined;
+        g2?: number | string | null | undefined;
+        glyphName?: number | string | null | undefined;
+        glyphOrientationHorizontal?: number | string | null | undefined;
+        glyphOrientationVertical?: number | string | null | undefined;
+        glyphRef?: number | string | null | undefined;
+        gradientTransform?: string | null | undefined;
+        gradientUnits?: string | null | undefined;
+        hanging?: number | string | null | undefined;
+        horizAdvX?: number | string | null | undefined;
+        horizOriginX?: number | string | null | undefined;
+        href?: string | null | undefined;
+        ideographic?: number | string | null | undefined;
+        imageRendering?: number | string | null | undefined;
+        in2?: number | string | null | undefined;
+        in?: string | null | undefined;
+        intercept?: number | string | null | undefined;
+        k1?: number | string | null | undefined;
+        k2?: number | string | null | undefined;
+        k3?: number | string | null | undefined;
+        k4?: number | string | null | undefined;
+        k?: number | string | null | undefined;
+        kernelMatrix?: number | string | null | undefined;
+        kernelUnitLength?: number | string | null | undefined;
+        kerning?: number | string | null | undefined;
+        keyPoints?: number | string | null | undefined;
+        keySplines?: number | string | null | undefined;
+        keyTimes?: number | string | null | undefined;
+        lengthAdjust?: number | string | null | undefined;
+        letterSpacing?: number | string | null | undefined;
+        lightingColor?: number | string | null | undefined;
+        limitingConeAngle?: number | string | null | undefined;
+        local?: number | string | null | undefined;
+        markerEnd?: string | null | undefined;
+        markerHeight?: number | string | null | undefined;
+        markerMid?: string | null | undefined;
+        markerStart?: string | null | undefined;
+        markerUnits?: number | string | null | undefined;
+        markerWidth?: number | string | null | undefined;
+        mask?: string | null | undefined;
+        maskContentUnits?: number | string | null | undefined;
+        maskUnits?: number | string | null | undefined;
+        mathematical?: number | string | null | undefined;
+        mode?: number | string | null | undefined;
+        numOctaves?: number | string | null | undefined;
+        offset?: number | string | null | undefined;
+        opacity?: number | string | null | undefined;
+        operator?: number | string | null | undefined;
+        order?: number | string | null | undefined;
+        orient?: number | string | null | undefined;
+        orientation?: number | string | null | undefined;
+        origin?: number | string | null | undefined;
+        overflow?: number | string | null | undefined;
+        overlinePosition?: number | string | null | undefined;
+        overlineThickness?: number | string | null | undefined;
+        paintOrder?: number | string | null | undefined;
+        panose1?: number | string | null | undefined;
+        path?: string | null | undefined;
+        pathLength?: number | string | null | undefined;
+        patternContentUnits?: string | null | undefined;
+        patternTransform?: number | string | null | undefined;
+        patternUnits?: string | null | undefined;
+        pointerEvents?: number | string | null | undefined;
+        points?: string | null | undefined;
+        pointsAtX?: number | string | null | undefined;
+        pointsAtY?: number | string | null | undefined;
+        pointsAtZ?: number | string | null | undefined;
+        preserveAlpha?: Booleanish | null | undefined;
+        preserveAspectRatio?: string | null | undefined;
+        primitiveUnits?: number | string | null | undefined;
+        r?: number | string | null | undefined;
+        radius?: number | string | null | undefined;
+        refX?: number | string | null | undefined;
+        refY?: number | string | null | undefined;
+        renderingIntent?: number | string | null | undefined;
+        repeatCount?: number | string | null | undefined;
+        repeatDur?: number | string | null | undefined;
+        requiredExtensions?: number | string | null | undefined;
+        requiredFeatures?: number | string | null | undefined;
+        restart?: number | string | null | undefined;
+        result?: string | null | undefined;
+        rotate?: number | string | null | undefined;
+        rx?: number | string | null | undefined;
+        ry?: number | string | null | undefined;
+        scale?: number | string | null | undefined;
+        seed?: number | string | null | undefined;
+        shapeRendering?: number | string | null | undefined;
+        slope?: number | string | null | undefined;
+        spacing?: number | string | null | undefined;
+        specularConstant?: number | string | null | undefined;
+        specularExponent?: number | string | null | undefined;
+        speed?: number | string | null | undefined;
+        spreadMethod?: string | null | undefined;
+        startOffset?: number | string | null | undefined;
+        stdDeviation?: number | string | null | undefined;
+        stemh?: number | string | null | undefined;
+        stemv?: number | string | null | undefined;
+        stitchTiles?: number | string | null | undefined;
+        stopColor?: string | null | undefined;
+        stopOpacity?: number | string | null | undefined;
+        strikethroughPosition?: number | string | null | undefined;
+        strikethroughThickness?: number | string | null | undefined;
+        string?: number | string | null | undefined;
+        stroke?: string | null | undefined;
+        strokeDasharray?: string | number | null | undefined;
+        strokeDashoffset?: string | number | null | undefined;
+        strokeLinecap?: "butt" | "round" | "square" | "inherit" | null | undefined;
+        strokeLinejoin?: "miter" | "round" | "bevel" | "inherit" | null | undefined;
+        strokeMiterlimit?: number | string | null | undefined;
+        strokeOpacity?: number | string | null | undefined;
+        strokeWidth?: number | string | null | undefined;
+        surfaceScale?: number | string | null | undefined;
+        systemLanguage?: number | string | null | undefined;
+        tableValues?: number | string | null | undefined;
+        targetX?: number | string | null | undefined;
+        targetY?: number | string | null | undefined;
+        textAnchor?: string | null | undefined;
+        textDecoration?: number | string | null | undefined;
+        textLength?: number | string | null | undefined;
+        textRendering?: number | string | null | undefined;
+        to?: number | string | null | undefined;
+        transform?: string | null | undefined;
+        u1?: number | string | null | undefined;
+        u2?: number | string | null | undefined;
+        underlinePosition?: number | string | null | undefined;
+        underlineThickness?: number | string | null | undefined;
+        unicode?: number | string | null | undefined;
+        unicodeBidi?: number | string | null | undefined;
+        unicodeRange?: number | string | null | undefined;
+        unitsPerEm?: number | string | null | undefined;
+        vAlphabetic?: number | string | null | undefined;
+        values?: string | null | undefined;
+        vectorEffect?: number | string | null | undefined;
+        version?: string | null | undefined;
+        vertAdvY?: number | string | null | undefined;
+        vertOriginX?: number | string | null | undefined;
+        vertOriginY?: number | string | null | undefined;
+        vHanging?: number | string | null | undefined;
+        vIdeographic?: number | string | null | undefined;
+        viewBox?: string | null | undefined;
+        viewTarget?: number | string | null | undefined;
+        visibility?: number | string | null | undefined;
+        vMathematical?: number | string | null | undefined;
+        widths?: number | string | null | undefined;
+        wordSpacing?: number | string | null | undefined;
+        writingMode?: number | string | null | undefined;
+        x1?: number | string | null | undefined;
+        x2?: number | string | null | undefined;
+        x?: number | string | null | undefined;
+        xChannelSelector?: string | null | undefined;
+        xHeight?: number | string | null | undefined;
+        xlinkActuate?: string | null | undefined;
+        xlinkArcrole?: string | null | undefined;
+        xlinkHref?: string | null | undefined;
+        xlinkRole?: string | null | undefined;
+        xlinkShow?: string | null | undefined;
+        xlinkTitle?: string | null | undefined;
+        xlinkType?: string | null | undefined;
+        xmlBase?: string | null | undefined;
+        xmlLang?: string | null | undefined;
+        xmlns?: string | null | undefined;
+        xmlnsXlink?: string | null | undefined;
+        xmlSpace?: string | null | undefined;
+        y1?: number | string | null | undefined;
+        y2?: number | string | null | undefined;
+        y?: number | string | null | undefined;
+        yChannelSelector?: string | null | undefined;
+        z?: number | string | null | undefined;
+        zoomAndPan?: string | null | undefined;
     }
 
     interface WebViewHTMLAttributes<T> extends HTMLAttributes<T> {
-        allowFullScreen?: boolean | undefined;
-        allowpopups?: boolean | undefined;
-        autoFocus?: boolean | undefined;
-        autosize?: boolean | undefined;
-        blinkfeatures?: string | undefined;
-        disableblinkfeatures?: string | undefined;
-        disableguestresize?: boolean | undefined;
-        disablewebsecurity?: boolean | undefined;
-        guestinstance?: string | undefined;
-        httpreferrer?: string | undefined;
-        nodeintegration?: boolean | undefined;
-        partition?: string | undefined;
-        plugins?: boolean | undefined;
-        preload?: string | undefined;
-        src?: string | undefined;
-        useragent?: string | undefined;
-        webpreferences?: string | undefined;
+        allowFullScreen?: boolean | null | undefined;
+        allowpopups?: boolean | null | undefined;
+        autoFocus?: boolean | null | undefined;
+        autosize?: boolean | null | undefined;
+        blinkfeatures?: string | null | undefined;
+        disableblinkfeatures?: string | null | undefined;
+        disableguestresize?: boolean | null | undefined;
+        disablewebsecurity?: boolean | null | undefined;
+        guestinstance?: string | null | undefined;
+        httpreferrer?: string | null | undefined;
+        nodeintegration?: boolean | null | undefined;
+        partition?: string | null | undefined;
+        plugins?: boolean | null | undefined;
+        preload?: string | null | undefined;
+        src?: string | null | undefined;
+        useragent?: string | null | undefined;
+        webpreferences?: string | null | undefined;
     }
 
     //
@@ -3094,7 +3094,7 @@ type MergePropTypes<P, T> =
                 & Pick<P, Exclude<keyof P, keyof T>>
         : never;
 
-type InexactPartial<T> = { [K in keyof T]?: T[K] | undefined };
+type InexactPartial<T> = { [K in keyof T]?: T[K] | null | undefined };
 
 // Any prop that has a default prop becomes optional, but its type is unchanged
 // Undeclared default props are augmented into the resulting allowable attributes
